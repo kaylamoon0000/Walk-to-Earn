@@ -17,6 +17,7 @@
       --navy2: #0f2439;
       --green: #2dbb7f;
       --gold: #f3bf4c;
+      --red: #e86a6a;
       --text: #7f8792;
       --heading: #566170;
       --line: #e7ebf0;
@@ -177,11 +178,14 @@
       font-weight: 700;
       cursor: pointer;
       transition: 0.2s ease;
+      background: transparent;
     }
 
     .button:hover { transform: translateY(-1px); }
     .button.primary { background: white; color: var(--blue3); border-color: white; }
     .button.secondary { background: rgba(255,255,255,0.08); }
+    .button.dark { background: var(--navy); color: white; border-color: var(--navy); }
+    .button.green { background: var(--green); color: white; border-color: var(--green); }
 
     .hero-card {
       background: rgba(255,255,255,0.12);
@@ -306,10 +310,7 @@
       box-shadow: var(--shadow);
     }
 
-    .content-panel {
-      min-width: 0;
-    }
-
+    .content-panel { min-width: 0; }
     .tab-panel { display: none; }
     .tab-panel.active { display: block; }
 
@@ -322,11 +323,7 @@
       margin-bottom: 1.4rem;
     }
 
-    .grid {
-      display: grid;
-      gap: 1rem;
-    }
-
+    .grid { display: grid; gap: 1rem; }
     .grid.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .grid.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
     .grid.four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
@@ -372,11 +369,7 @@
     }
 
     .form-stack > * + * { margin-top: 0.9rem; }
-
-    .control {
-      display: block;
-    }
-
+    .control { display: block; }
     .control label {
       display: block;
       margin-bottom: 0.35rem;
@@ -463,7 +456,8 @@
     }
 
     .business-card .top,
-    .proposal-card .top {
+    .proposal-card .top,
+    .flex-top {
       display: flex;
       justify-content: space-between;
       gap: 1rem;
@@ -484,6 +478,7 @@
     .badge.green { background: rgba(45,187,127,0.12); color: #1a8f61; }
     .badge.gold { background: rgba(243,191,76,0.16); color: #996d0b; }
     .badge.blue { background: rgba(90,167,245,0.14); color: #2c79c8; }
+    .badge.red { background: rgba(232,106,106,0.12); color: #b44f4f; }
 
     .mock-app {
       border-radius: 1.3rem;
@@ -501,16 +496,8 @@
     .mock-body { padding: 1rem; }
 
     .leaderboard li,
-    .clean li {
-      margin-bottom: 0.55rem;
-    }
-
-    .leaderboard {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-
+    .clean li { margin-bottom: 0.55rem; }
+    .leaderboard { list-style: none; padding: 0; margin: 0; }
     .leaderboard li {
       display: flex;
       justify-content: space-between;
@@ -521,22 +508,180 @@
       border: 1px solid #e0ebf6;
     }
 
-    .footer-note {
-      text-align: center;
-      color: #91a0b0;
-      padding: 0.75rem 0 3rem;
+    .interactive-map {
+      position: relative;
+      height: 420px;
+      border-radius: 1.2rem;
+      overflow: hidden;
+      background:
+        linear-gradient(180deg, #f6fbff, #edf5fc),
+        repeating-linear-gradient(0deg, transparent, transparent 29px, rgba(127,135,146,0.04) 29px, rgba(127,135,146,0.04) 30px),
+        repeating-linear-gradient(90deg, transparent, transparent 29px, rgba(127,135,146,0.04) 29px, rgba(127,135,146,0.04) 30px);
+      border: 1px solid #dce7f3;
     }
+
+    .path {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    .path svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .path-line {
+      fill: none;
+      stroke: #9ec6f3;
+      stroke-width: 9;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-dasharray: 12 12;
+      opacity: 0.95;
+    }
+
+    .poi {
+      position: absolute;
+      transform: translate(-50%, -50%);
+      min-width: 132px;
+      max-width: 160px;
+      padding: 0.7rem 0.8rem;
+      border-radius: 1rem;
+      border: 1px solid #dce7f3;
+      background: rgba(255,255,255,0.95);
+      box-shadow: var(--shadow);
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .poi:hover,
+    .poi.active {
+      border-color: #8bbcf3;
+      transform: translate(-50%, -50%) scale(1.02);
+    }
+
+    .poi small {
+      display: block;
+      color: #7b8898;
+      font-size: 0.82rem;
+    }
+
+    .poi strong {
+      display: block;
+      color: var(--navy);
+      font-size: 0.98rem;
+    }
+
+    .poi .tag {
+      margin-top: 0.35rem;
+      display: inline-flex;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #2c79c8;
+      background: #eef5ff;
+      border-radius: 999px;
+      padding: 0.25rem 0.5rem;
+    }
+
+    .walker {
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--navy);
+      box-shadow: 0 0 0 6px rgba(23,50,79,0.12);
+      transform: translate(-50%, -50%);
+      transition: left 0.45s ease, top 0.45s ease;
+      z-index: 5;
+    }
+
+    .live-panel {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 1rem;
+    }
+
+    .notification {
+      border-radius: 1rem;
+      padding: 0.95rem 1rem;
+      font-weight: 700;
+      margin-bottom: 0.8rem;
+      display: none;
+    }
+
+    .notification.show { display: block; }
+    .notification.blue { background: #edf5ff; color: #2c79c8; }
+    .notification.green { background: rgba(45,187,127,0.12); color: #1a8f61; }
+
+    .session-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .session-list li {
+      border: 1px solid var(--line);
+      border-radius: 0.9rem;
+      padding: 0.8rem 0.9rem;
+      margin-bottom: 0.7rem;
+      background: white;
+    }
+
+    .metric-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.7rem;
+      margin-top: 0.75rem;
+    }
+
+    .metric-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.45rem 0.65rem;
+      border-radius: 999px;
+      background: #f5f9fe;
+      border: 1px solid #dde8f3;
+      color: var(--navy);
+      font-weight: 700;
+      font-size: 0.88rem;
+    }
+
+    .store-filter {
+      display: flex;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+      margin-bottom: 1rem;
+    }
+
+    .filter-btn {
+      border: 1px solid #d7e3ef;
+      background: white;
+      color: #5f6c7b;
+      font-weight: 700;
+      padding: 0.55rem 0.75rem;
+      border-radius: 999px;
+      cursor: pointer;
+    }
+
+    .filter-btn.active {
+      background: #edf5ff;
+      color: var(--blue3);
+      border-color: #b8d4f4;
+    }
+
+    .hidden { display: none !important; }
+    .footer-note { text-align: center; color: #91a0b0; padding: 0.75rem 0 3rem; }
 
     @media (max-width: 1100px) {
       .layout,
       .route-builder,
-      .hero-grid {
+      .hero-grid,
+      .live-panel {
         grid-template-columns: 1fr;
       }
-
-      .sidebar {
-        position: static;
-      }
+      .sidebar { position: static; }
     }
 
     @media (max-width: 760px) {
@@ -548,15 +693,14 @@
       .phone-stats {
         grid-template-columns: 1fr;
       }
-
       .nav-inner {
         padding: 0.75rem 0;
         align-items: flex-start;
         flex-direction: column;
       }
-
       .nav-links { justify-content: flex-start; }
       .hero { padding-top: 3.5rem; }
+      .interactive-map { height: 360px; }
     }
   </style>
 </head>
@@ -571,7 +715,7 @@
         <a class="nav-link active" data-tab="home">Home</a>
         <a class="nav-link" data-tab="proposal">Proposal</a>
         <a class="nav-link" data-tab="beforeafter">Before / After</a>
-        <a class="nav-link" data-tab="routes">Routes</a>
+        <a class="nav-link" data-tab="routes">Live Route</a>
         <a class="nav-link" data-tab="businesses">Businesses</a>
         <a class="nav-link" data-tab="app">App Demo</a>
       </div>
@@ -583,10 +727,10 @@
       <div>
         <div class="eyebrow"><i class="fa-solid fa-sparkles"></i> Functional concept platform</div>
         <h1>Walk more. Verify visits. Support Harlem businesses.</h1>
-        <p>This interactive website turns the proposal into a working product concept: users can explore the idea, compare before-and-after redesign visuals, preview personalized route generation, understand the business dashboard, and experience a user-friendly mock app flow.</p>
+        <p>This version behaves more like the real product: you can start a live walk session, click checkpoints, simulate QR confirmations, switch business dashboards, and explore how the experience would actually operate instead of only reading dropdown results.</p>
         <div class="hero-actions">
-          <a class="button primary" data-jump="proposal"><i class="fa-solid fa-file-lines"></i> View Proposal</a>
-          <a class="button secondary" data-jump="app"><i class="fa-solid fa-mobile-screen-button"></i> Try App Demo</a>
+          <a class="button primary" data-jump="routes"><i class="fa-solid fa-person-walking"></i> Start Live Demo</a>
+          <a class="button secondary" data-jump="businesses"><i class="fa-solid fa-store"></i> Open Business View</a>
         </div>
       </div>
       <div class="hero-card">
@@ -602,10 +746,10 @@
             </div>
           </div>
           <div class="phone-stats">
-            <div class="stat"><strong>12 min</strong> walk verified</div>
-            <div class="stat"><strong>1 checkpoint</strong> until reward</div>
-            <div class="stat"><strong>15% off</strong> at local cafe</div>
-            <div class="stat"><strong>Safe route</strong> shade prioritized</div>
+            <div class="stat"><strong id="heroMinutes">12 min</strong> walk verified</div>
+            <div class="stat"><strong id="heroCheckpoint">1 checkpoint</strong> until reward</div>
+            <div class="stat"><strong id="heroReward">15% off</strong> next reward</div>
+            <div class="stat"><strong id="heroMode">Safe route</strong> live preferences</div>
           </div>
         </div>
       </div>
@@ -618,7 +762,7 @@
       <button class="active" data-tab="home">Home</button>
       <button data-tab="proposal">Proposal</button>
       <button data-tab="beforeafter">Before / After</button>
-      <button data-tab="routes">Route Builder</button>
+      <button data-tab="routes">Live Route</button>
       <button data-tab="businesses">Business Dashboard</button>
       <button data-tab="app">App Demo</button>
     </aside>
@@ -627,7 +771,7 @@
       <div class="tab-panel active" id="home">
         <div class="section-card">
           <h2>Platform Overview</h2>
-          <p>This functional concept website is designed to make the AI Walk-to-Earn Harlem idea feel real and usable. Instead of presenting only static proposal text, the platform organizes the concept into separate tabs for planning, comparison, route personalization, business participation, and the user app experience. The result is a more user-friendly and visually appealing system that communicates how the program would actually work in practice.</p>
+          <p>This functional concept website is designed to make AI Walk-to-Earn Harlem feel like a real operating product. Instead of presenting only static proposal text, the platform now includes interactive sessions, clickable checkpoints, simulated QR confirmations, business filtering, and a more dynamic user journey.</p>
         </div>
 
         <div class="grid four">
@@ -639,12 +783,12 @@
 
         <div class="grid two" style="margin-top:1rem;">
           <div class="section-card">
-            <h3>What the platform achieves</h3>
+            <h3>What feels more real now</h3>
             <ul class="clean">
-              <li>Encourages walking with verified routes and reward checkpoints</li>
-              <li>Supports local businesses through measurable foot traffic and coupons</li>
-              <li>Improves the plaza experience through comfort, safety, and destination points</li>
-              <li>Gives stakeholders a clearer picture of how the system works end to end</li>
+              <li>Users can simulate a walk session checkpoint by checkpoint</li>
+              <li>The app demo includes live notifications and reward unlock behavior</li>
+              <li>The business tab changes based on selected store tiers</li>
+              <li>The route tab behaves more like a real operating map with click actions</li>
             </ul>
           </div>
           <div class="section-card">
@@ -652,7 +796,7 @@
             <div class="timeline">
               <div class="timeline-item"><strong>User opens app</strong><br>Chooses route length, pace, and reward preference.</div>
               <div class="timeline-item"><strong>AI builds route</strong><br>Suggests the safest and most engaging path through the plaza.</div>
-              <div class="timeline-item"><strong>User walks + scans QR</strong><br>Landmark checkpoints verify real plaza engagement.</div>
+              <div class="timeline-item"><strong>User reaches checkpoint</strong><br>Clicks or scans to confirm a real landmark stop.</div>
               <div class="timeline-item"><strong>Reward unlocks</strong><br>Business coupon or points appear instantly in the app.</div>
             </div>
           </div>
@@ -715,17 +859,21 @@
           <img src="image/image7.png" alt="Before image 4">
           <img src="image/image8.png" alt="After image 4">
         </div>
-
-        <div class="section-card" style="margin-top:1rem;">
-          <h3>Why this redesign works</h3>
-          <p>The final redesign improves the plaza by turning passive movement into active participation. AI recommends optimized paths based on time, accessibility, shade, crowd levels, and user preferences. QR checkpoints near businesses verify that users truly visited the space, and the reward system makes exploration feel worthwhile instead of accidental.</p>
-        </div>
       </div>
 
       <div class="tab-panel" id="routes">
         <div class="section-card">
-          <h2>Interactive Route Builder</h2>
-          <p>This tab simulates how a real user-friendly version of the platform could generate different walking experiences. The controls below demonstrate how route recommendations can respond to time available, walking pace, accessibility needs, and reward preference.</p>
+          <div class="flex-top">
+            <div>
+              <h2>Live Route Experience</h2>
+              <p>Pick a route style, start the session, and click plaza checkpoints as if you were actually moving through the space. The panel updates in real time to simulate walk verification, QR scans, and reward unlocks.</p>
+            </div>
+            <div class="metric-row">
+              <span class="metric-pill"><i class="fa-solid fa-person-walking"></i> <span id="sessionDistance">0.0 mi</span></span>
+              <span class="metric-pill"><i class="fa-solid fa-qrcode"></i> <span id="sessionScans">0 scans</span></span>
+              <span class="metric-pill"><i class="fa-solid fa-gift"></i> <span id="sessionPoints">0 pts</span></span>
+            </div>
+          </div>
         </div>
 
         <div class="route-builder">
@@ -754,14 +902,47 @@
                 <option value="mixed">Mixed rewards</option>
               </select>
             </div>
-            <button class="button primary" id="generateRoute" type="button"><i class="fa-solid fa-wand-magic-sparkles"></i> Generate Route</button>
+            <button class="button primary" id="generateRoute" type="button"><i class="fa-solid fa-wand-magic-sparkles"></i> Build Route</button>
+            <button class="button green" id="startSession" type="button"><i class="fa-solid fa-play"></i> Start Session</button>
+            <button class="button dark" id="resetSession" type="button"><i class="fa-solid fa-rotate-left"></i> Reset Session</button>
           </div>
 
           <div class="route-output">
+            <div class="notification blue" id="routeNotification"></div>
             <h3 id="routeTitle">20-Minute Discovery Route</h3>
             <p id="routeSummary">A balanced route that prioritizes shade, moderate walking distance, and food rewards from businesses at natural pause points.</p>
             <div class="chips" id="routeChips"></div>
-            <div class="timeline" id="routeTimeline"></div>
+            <div class="live-panel">
+              <div>
+                <div class="interactive-map" id="interactiveMap">
+                  <div class="path">
+                    <svg viewBox="0 0 100 100" preserveAspectRatio="none">
+                      <path class="path-line" d="M10,75 C18,66 21,44 34,39 C49,32 57,59 69,56 C78,54 84,38 91,26" />
+                    </svg>
+                  </div>
+                  <div class="walker" id="walker" style="left:10%; top:75%;"></div>
+                  <div class="poi" data-step="0" data-points="20" data-reward="10% off coffee" style="left:12%; top:74%;">
+                    <small>Start</small><strong>Transit Entry</strong><span class="tag">Begin route</span>
+                  </div>
+                  <div class="poi" data-step="1" data-points="35" data-reward="Cafe reward" style="left:33%; top:40%;">
+                    <small>Checkpoint 1</small><strong>Harlem Cafe</strong><span class="tag">QR available</span>
+                  </div>
+                  <div class="poi" data-step="2" data-points="40" data-reward="Bookstore discount" style="left:68%; top:56%;">
+                    <small>Checkpoint 2</small><strong>Books & Gifts</strong><span class="tag">QR available</span>
+                  </div>
+                  <div class="poi" data-step="3" data-points="60" data-reward="Final combo reward" style="left:91%; top:26%;">
+                    <small>Final Stop</small><strong>Plaza Market</strong><span class="tag">Unlock final</span>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <div class="notification green" id="rewardNotification"></div>
+                <ul class="session-list" id="sessionList">
+                  <li><strong>How to use this demo</strong><br>Start the session, then click the checkpoint cards on the map in order to simulate movement and QR verification.</li>
+                </ul>
+              </div>
+            </div>
+            <div class="timeline" id="routeTimeline" style="margin-top:1rem;"></div>
           </div>
         </div>
       </div>
@@ -769,25 +950,30 @@
       <div class="tab-panel" id="businesses">
         <div class="section-card">
           <h2>Business Participation Dashboard</h2>
-          <p>Local businesses are a core part of the platform. This tab models what a participating shop might see: visits, scans, conversion trends, and what kind of promotion tier they are offering. It shows that the project is not just a pedestrian tool, but a measurable economic support system.</p>
+          <p>Switch between stores to see how the dashboard could behave in real time. Each card shows a different business profile, promotion tier, and estimated value from the walk-to-earn system.</p>
+          <div class="store-filter">
+            <button class="filter-btn active" data-store="shake">Harlem Shake</button>
+            <button class="filter-btn" data-store="sylvia">Sylvia's Corner</button>
+            <button class="filter-btn" data-store="books">Harlem Books</button>
+          </div>
         </div>
 
-        <div class="grid three">
-          <div class="business-card">
+        <div class="grid three" id="storeCards">
+          <div class="business-card store-panel" data-store-panel="shake">
             <div class="top"><h4>Harlem Shake</h4><span class="badge green">Tier 3 Premium</span></div>
             <p><strong>QR scans this week:</strong> 214</p>
             <p><strong>Estimated store visits:</strong> 89</p>
             <p><strong>Top reward:</strong> Free drink with purchase</p>
             <p><strong>Best time:</strong> 11am–2pm</p>
           </div>
-          <div class="business-card">
+          <div class="business-card store-panel" data-store-panel="sylvia">
             <div class="top"><h4>Sylvia's Corner</h4><span class="badge gold">Tier 2 Standard</span></div>
             <p><strong>QR scans this week:</strong> 176</p>
             <p><strong>Estimated store visits:</strong> 72</p>
             <p><strong>Top reward:</strong> 15% off lunch combo</p>
             <p><strong>Best time:</strong> 12pm–3pm</p>
           </div>
-          <div class="business-card">
+          <div class="business-card store-panel" data-store-panel="books">
             <div class="top"><h4>Harlem Books</h4><span class="badge blue">Tier 1 Basic</span></div>
             <p><strong>QR scans this week:</strong> 121</p>
             <p><strong>Estimated store visits:</strong> 48</p>
@@ -797,14 +983,10 @@
         </div>
 
         <div class="grid two" style="margin-top:1rem;">
-          <div class="section-card">
-            <h3>Why businesses would join</h3>
-            <ul class="clean">
-              <li>Visible weekly scan and visit data</li>
-              <li>Time-of-day insights for promotions</li>
-              <li>Reward tiers based on budget and goals</li>
-              <li>Clearer ROI than traditional marketing guesses</li>
-            </ul>
+          <div class="section-card" id="storeInsights">
+            <h3>Selected business insights</h3>
+            <p><strong>Current business:</strong> Harlem Shake</p>
+            <p>Premium placement means this business appears more often in food-focused route recommendations. The dashboard suggests lunchtime is the strongest conversion window, and AI would prioritize this stop for users who frequently redeem food offers.</p>
           </div>
           <div class="section-card">
             <h3>Suggested business tools</h3>
@@ -820,30 +1002,40 @@
 
       <div class="tab-panel" id="app">
         <div class="section-card">
-          <h2>App Demo Experience</h2>
-          <p>This mock app experience shows how the platform can be functional, intuitive, and visually clear. It demonstrates the real feeling of use: onboarding preferences, live route progress, checkpoint confirmation, and reward unlocks.</p>
+          <h2>Interactive App Demo</h2>
+          <p>Use the controls below to simulate what a real user sees. You can trigger a checkpoint alert, scan confirmation, and reward unlock without leaving the page.</p>
         </div>
 
         <div class="grid two">
           <div class="mock-app">
             <div class="mock-header">
-              <h3 style="color:white; margin:0;">User Journey</h3>
-              <p style="margin:0.35rem 0 0; color:rgba(255,255,255,0.82);">From opening the app to claiming a reward</p>
+              <h3 style="color:white; margin:0;">Live App Screen</h3>
+              <p style="margin:0.35rem 0 0; color:rgba(255,255,255,0.82);">Interactive reward and checkpoint simulation</p>
             </div>
             <div class="mock-body">
-              <div class="timeline">
-                <div class="timeline-item"><strong>1. Onboarding</strong><br>User selects time, walking mode, and reward preferences.</div>
-                <div class="timeline-item"><strong>2. Smart route</strong><br>AI recommends a path based on safety, shade, comfort, and checkpoints.</div>
-                <div class="timeline-item"><strong>3. Checkpoint alert</strong><br>The app buzzes when the user gets close to a landmark near a business.</div>
-                <div class="timeline-item"><strong>4. Reward screen</strong><br>QR scan confirms visit and unlocks a coupon or points instantly.</div>
+              <div class="notification blue show" id="appStatus">Session ready. Tap a button below to simulate the user journey.</div>
+              <div class="chips">
+                <span class="chip"><i class="fa-solid fa-location-dot"></i> Route A active</span>
+                <span class="chip"><i class="fa-solid fa-fire"></i> 3-day streak</span>
+                <span class="chip"><i class="fa-solid fa-store"></i> 4 businesses visited</span>
+              </div>
+              <div class="grid two">
+                <button class="button dark" id="triggerCheckpoint" type="button"><i class="fa-solid fa-bell"></i> Trigger Checkpoint</button>
+                <button class="button green" id="scanCheckpoint" type="button"><i class="fa-solid fa-qrcode"></i> Scan QR</button>
+              </div>
+              <div class="section-card" style="margin-top:1rem; margin-bottom:0; box-shadow:none;">
+                <h4>Unlocked rewards</h4>
+                <ul class="leaderboard" id="rewardList">
+                  <li><span>No rewards unlocked yet</span><strong>0 pts</strong></li>
+                </ul>
               </div>
             </div>
           </div>
 
           <div class="mock-app">
             <div class="mock-header">
-              <h3 style="color:white; margin:0;">Live Engagement</h3>
-              <p style="margin:0.35rem 0 0; color:rgba(255,255,255,0.82);">Gamification keeps users coming back</p>
+              <h3 style="color:white; margin:0;">Gamification Layer</h3>
+              <p style="margin:0.35rem 0 0; color:rgba(255,255,255,0.82);">Why users would keep coming back</p>
             </div>
             <div class="mock-body">
               <ul class="leaderboard">
@@ -852,10 +1044,14 @@
                 <li><span>2. Andre</span><strong>645 pts</strong></li>
                 <li><span>3. Jess</span><strong>598 pts</strong></li>
               </ul>
-              <div class="chips" style="margin-top:1rem;">
-                <span class="chip"><i class="fa-solid fa-fire"></i> 3-day streak</span>
-                <span class="chip"><i class="fa-solid fa-trophy"></i> Plaza Explorer</span>
-                <span class="chip"><i class="fa-solid fa-store"></i> 4 businesses visited</span>
+              <div class="section-card" style="margin-top:1rem; margin-bottom:0; box-shadow:none;">
+                <h4>Suggested reward loops</h4>
+                <ul class="clean">
+                  <li>Three-day streak bonus coupon</li>
+                  <li>Seasonal challenge route for Harlem businesses</li>
+                  <li>Achievement badges for visiting every checkpoint</li>
+                  <li>Neighborhood rank based on verified weekly walks</li>
+                </ul>
               </div>
             </div>
           </div>
@@ -881,10 +1077,7 @@
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    tabs.forEach(el => {
-      el.addEventListener('click', () => activateTab(el.dataset.tab));
-    });
-
+    tabs.forEach(el => el.addEventListener('click', () => activateTab(el.dataset.tab)));
     document.querySelectorAll('[data-jump]').forEach(el => {
       el.addEventListener('click', (e) => {
         e.preventDefault();
@@ -897,78 +1090,50 @@
         title: '10-Minute Quick Reward Route',
         summary: 'A short lunchtime path designed for fast completion and one high-likelihood food checkpoint.',
         chips: ['Fast loop', 'Food reward', 'High visibility'],
-        steps: [
-          'Start at plaza entry near transit stop.',
-          'Walk along primary shaded path for motion verification.',
-          'Scan checkpoint at cafe doorway.',
-          'Unlock 10% off or small drink reward.'
-        ]
+        steps: ['Start at plaza entry near transit stop.', 'Walk toward the cafe checkpoint.', 'Scan the first QR marker.', 'Unlock a quick coffee reward.'],
+        mode: 'Quick route', heroReward: '10% off'
       },
       '20-standard-food': {
         title: '20-Minute Discovery Route',
         summary: 'A balanced route that prioritizes shade, moderate walking distance, and food rewards from businesses at natural pause points.',
         chips: ['Shade prioritized', '2 checkpoints', 'Food rewards'],
-        steps: [
-          'Begin at the plaza edge and enter the main loop.',
-          'Pass comfort seating zone and landscaped center path.',
-          'Scan checkpoint 1 at local food partner.',
-          'Continue to landmark sign near second business and unlock final reward.'
-        ]
+        steps: ['Begin at the plaza edge and enter the main loop.', 'Pass comfort seating zone and landscaped center path.', 'Scan checkpoint 1 at local food partner.', 'Continue to landmark sign near second business and unlock final reward.'],
+        mode: 'Safe route', heroReward: '15% off'
       },
       '45-standard-food': {
         title: '45-Minute Full Plaza Loop',
         summary: 'A full exploration route for users who want to experience the entire site and collect multiple rewards.',
         chips: ['Full loop', '3 checkpoints', 'Exploration'],
-        steps: [
-          'Walk the complete plaza perimeter and central lane.',
-          'Visit three QR checkpoints linked to different businesses.',
-          'Receive tiered points for each confirmed stop.',
-          'Unlock a bonus streak reward for full completion.'
-        ]
+        steps: ['Walk the complete plaza perimeter and central lane.', 'Visit three QR checkpoints linked to different businesses.', 'Receive tiered points for each confirmed stop.', 'Unlock a bonus streak reward for full completion.'],
+        mode: 'Explorer mode', heroReward: 'Combo bonus'
       },
       '20-slow-food': {
         title: '20-Minute Slow Pace Route',
         summary: 'A stroller-friendly or elderly-friendly version with longer windows, more seating, and low-pressure checkpoint timing.',
         chips: ['Slow pace', 'Seating stops', 'Accessible'],
-        steps: [
-          'Begin on the smoothest surface route.',
-          'Pause at seating node before checkpoint alert.',
-          'Scan the business landmark without time pressure.',
-          'Receive reward after easy completion.'
-        ]
+        steps: ['Begin on the smoothest surface route.', 'Pause at seating node before checkpoint alert.', 'Scan the business landmark without time pressure.', 'Receive reward after easy completion.'],
+        mode: 'Slow pace', heroReward: 'Easy reward'
       },
       '20-wheelchair-food': {
         title: '20-Minute Wheelchair-Friendly Route',
         summary: 'An accessible route designed to avoid uneven segments and prioritize wide paths and step-free circulation.',
         chips: ['Wheelchair-friendly', 'Wide paths', 'Safe surfaces'],
-        steps: [
-          'Start on the primary step-free entrance path.',
-          'Use the widest circulation lane through the plaza.',
-          'Reach accessible checkpoint near storefront edge.',
-          'Unlock food reward with verified route completion.'
-        ]
+        steps: ['Start on the primary step-free entrance path.', 'Use the widest circulation lane through the plaza.', 'Reach accessible checkpoint near storefront edge.', 'Unlock food reward with verified route completion.'],
+        mode: 'Accessible', heroReward: 'Food reward'
       },
       '20-standard-retail': {
         title: '20-Minute Retail Route',
         summary: 'A medium-length route designed to direct users toward shops and retail incentives rather than food stops.',
         chips: ['Retail focus', '2 shop stops', 'Browsing route'],
-        steps: [
-          'Walk toward the retail edge of the plaza.',
-          'Scan a checkpoint near the bookstore entrance.',
-          'Continue past visual landmark toward second shop.',
-          'Unlock discount offers for participating stores.'
-        ]
+        steps: ['Walk toward the retail edge of the plaza.', 'Scan a checkpoint near the bookstore entrance.', 'Continue past visual landmark toward second shop.', 'Unlock discount offers for participating stores.'],
+        mode: 'Retail route', heroReward: 'Store discount'
       },
       '20-standard-mixed': {
         title: '20-Minute Mixed Reward Route',
         summary: 'A flexible route that combines one food reward and one retail incentive to broaden user engagement.',
         chips: ['Mixed rewards', 'Balanced path', '2 checkpoints'],
-        steps: [
-          'Enter the plaza and follow the recommended mixed route.',
-          'Reach a food checkpoint at midpoint.',
-          'Continue to retail-edge landmark for second scan.',
-          'Earn both a coupon and bonus points.'
-        ]
+        steps: ['Enter the plaza and follow the recommended mixed route.', 'Reach a food checkpoint at midpoint.', 'Continue to retail-edge landmark for second scan.', 'Earn both a coupon and bonus points.'],
+        mode: 'Mixed route', heroReward: '2 rewards'
       }
     };
 
@@ -976,12 +1141,16 @@
     const routeSummary = document.getElementById('routeSummary');
     const routeChips = document.getElementById('routeChips');
     const routeTimeline = document.getElementById('routeTimeline');
+    const heroMode = document.getElementById('heroMode');
+    const heroReward = document.getElementById('heroReward');
 
     function renderRoute(data) {
       routeTitle.textContent = data.title;
       routeSummary.textContent = data.summary;
       routeChips.innerHTML = data.chips.map(chip => `<span class="chip"><i class="fa-solid fa-location-dot"></i>${chip}</span>`).join('');
       routeTimeline.innerHTML = data.steps.map(step => `<div class="timeline-item">${step}</div>`).join('');
+      heroMode.textContent = data.mode;
+      heroReward.textContent = data.heroReward;
     }
 
     renderRoute(routeData['20-standard-food']);
@@ -991,7 +1160,131 @@
       const pace = document.getElementById('pace').value;
       const rewardType = document.getElementById('rewardType').value;
       const key = `${minutes}-${pace}-${rewardType}`;
-      renderRoute(routeData[key] || routeData['20-standard-food']);
+      const route = routeData[key] || routeData['20-standard-food'];
+      renderRoute(route);
+      document.getElementById('routeNotification').textContent = `New route generated: ${route.title}. Click Start Session to begin.`;
+      document.getElementById('routeNotification').classList.add('show');
+    });
+
+    const walker = document.getElementById('walker');
+    const pois = [...document.querySelectorAll('.poi')];
+    const sessionList = document.getElementById('sessionList');
+    const rewardNotification = document.getElementById('rewardNotification');
+    const routeNotification = document.getElementById('routeNotification');
+    const sessionDistance = document.getElementById('sessionDistance');
+    const sessionScans = document.getElementById('sessionScans');
+    const sessionPoints = document.getElementById('sessionPoints');
+    const heroMinutes = document.getElementById('heroMinutes');
+    const heroCheckpoint = document.getElementById('heroCheckpoint');
+
+    let sessionStarted = false;
+    let currentStep = 0;
+    let points = 0;
+    let scans = 0;
+    let distance = 0;
+
+    function updateSessionUI() {
+      sessionDistance.textContent = `${distance.toFixed(1)} mi`;
+      sessionScans.textContent = `${scans} scans`;
+      sessionPoints.textContent = `${points} pts`;
+      heroMinutes.textContent = `${Math.max(2, 12 + scans * 3)} min`;
+      heroCheckpoint.textContent = currentStep >= 3 ? 'route complete' : `${Math.max(0, 3 - currentStep)} checkpoint${Math.max(0, 3 - currentStep) === 1 ? '' : 's'}`;
+    }
+
+    function resetSession() {
+      sessionStarted = false;
+      currentStep = 0;
+      points = 0;
+      scans = 0;
+      distance = 0;
+      walker.style.left = '10%';
+      walker.style.top = '75%';
+      sessionList.innerHTML = '<li><strong>How to use this demo</strong><br>Start the session, then click the checkpoint cards on the map in order to simulate movement and QR verification.</li>';
+      rewardNotification.classList.remove('show');
+      rewardNotification.textContent = '';
+      routeNotification.classList.remove('show');
+      routeNotification.textContent = '';
+      pois.forEach(p => p.classList.remove('active'));
+      updateSessionUI();
+    }
+
+    document.getElementById('startSession').addEventListener('click', () => {
+      sessionStarted = true;
+      routeNotification.textContent = 'Session started. Click the Start marker, then continue through the checkpoints in order.';
+      routeNotification.classList.add('show');
+      activateTab('routes');
+    });
+
+    document.getElementById('resetSession').addEventListener('click', resetSession);
+    resetSession();
+
+    pois.forEach(poi => {
+      poi.addEventListener('click', () => {
+        const step = Number(poi.dataset.step);
+        if (!sessionStarted) {
+          routeNotification.textContent = 'Start a session first to activate the route.';
+          routeNotification.classList.add('show');
+          return;
+        }
+        if (step !== currentStep) {
+          routeNotification.textContent = `This checkpoint is not active yet. Complete stop ${currentStep} first.`;
+          routeNotification.classList.add('show');
+          return;
+        }
+
+        poi.classList.add('active');
+        walker.style.left = poi.style.left;
+        walker.style.top = poi.style.top;
+        distance += step === 0 ? 0.1 : 0.3;
+        if (step > 0) {
+          scans += 1;
+          points += Number(poi.dataset.points);
+          rewardNotification.textContent = `Checkpoint confirmed at ${poi.querySelector('strong').textContent}. Reward unlocked: ${poi.dataset.reward}.`;
+          rewardNotification.classList.add('show');
+          sessionList.innerHTML = `<li><strong>${poi.querySelector('strong').textContent}</strong><br>QR scan verified. +${poi.dataset.points} points. Reward: ${poi.dataset.reward}.</li>` + sessionList.innerHTML;
+        } else {
+          sessionList.innerHTML = `<li><strong>Session started</strong><br>You entered the route successfully. Continue to the first business checkpoint.</li>` + sessionList.innerHTML;
+        }
+        currentStep += 1;
+        updateSessionUI();
+        if (currentStep > 3) {
+          routeNotification.textContent = 'Route complete. Final reward bundle unlocked for full plaza participation.';
+          routeNotification.classList.add('show');
+        }
+      });
+    });
+
+    const storeInsights = {
+      shake: '<h3>Selected business insights</h3><p><strong>Current business:</strong> Harlem Shake</p><p>Premium placement means this business appears more often in food-focused route recommendations. The dashboard suggests lunchtime is the strongest conversion window, and AI would prioritize this stop for users who frequently redeem food offers.</p>',
+      sylvia: '<h3>Selected business insights</h3><p><strong>Current business:</strong> Sylvia\'s Corner</p><p>This standard tier store performs best during midday and family traffic periods. The dashboard suggests limited-time lunch offers and event-day bonuses to increase repeat visits.</p>',
+      books: '<h3>Selected business insights</h3><p><strong>Current business:</strong> Harlem Books</p><p>This basic tier partner benefits from quieter browsing windows. The platform would surface this checkpoint more often on retail-focused or mixed routes, especially in the afternoon.</p>'
+    };
+
+    const storePanels = document.querySelectorAll('.store-panel');
+    const storeButtons = document.querySelectorAll('.filter-btn');
+    storeButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        storeButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const store = btn.dataset.store;
+        storePanels.forEach(panel => panel.classList.toggle('hidden', panel.dataset.storePanel !== store));
+        document.getElementById('storeInsights').innerHTML = storeInsights[store];
+      });
+    });
+    storePanels.forEach((panel, i) => panel.classList.toggle('hidden', i !== 0));
+
+    const appStatus = document.getElementById('appStatus');
+    const rewardList = document.getElementById('rewardList');
+    let appRewardCount = 0;
+
+    document.getElementById('triggerCheckpoint').addEventListener('click', () => {
+      appStatus.textContent = 'Checkpoint nearby: You are 30 feet from Harlem Shake. Scan the QR code on the storefront to unlock your offer.';
+    });
+
+    document.getElementById('scanCheckpoint').addEventListener('click', () => {
+      appRewardCount += 1;
+      appStatus.textContent = 'Checkpoint unlocked! You earned 15% off at Harlem Shake. Show this reward at checkout within 2 hours.';
+      rewardList.innerHTML = `<li><span>Harlem Shake reward #${appRewardCount}</span><strong>+15 pts</strong></li>` + rewardList.innerHTML;
     });
   </script>
 </body>
