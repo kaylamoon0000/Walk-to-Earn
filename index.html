@@ -804,7 +804,7 @@
             <h3>Session Feed</h3>
             <div class="status blue show" id="mainNotice">Build a route first. Then start the session to activate the stops and tracking.</div>
             <div class="feed" id="liveFeed">
-              <div class="feed-item"><strong>How it works</strong><br />The route settings change the whole experience. Start the session, then complete the stops in order to progress.</div>
+              <div class="feed-item"><strong>How it works</strong><br />The route settings change the preview, map, and stop list together. Start the session, then complete the stops in order.</div>
             </div>
           </div>
         </div>
@@ -925,8 +925,8 @@
         <img src="image/image6.png" alt="After image 3" />
         <img src="image/image7.png" alt="Before image 4" />
         <img src="image/image8.png" alt="After image 4" />
-        <img src="image/image9.png" alt="Before image 4" />
-        <img src="image/image10.png" alt="Before image 4" />
+        <img src="image/image9.png" alt="After image 4" />
+        <img src="image/image10.png" alt="After image 4" />
       </div>
     </section>
 
@@ -1029,126 +1029,128 @@
     const routeConfigurations = {
       "10-standard-food": {
         title: "10-Minute Quick Reward Route",
-        description: "A short lunchtime preview centered around Montefiore Square with quick food-based checkpoints.",
-        summary: "Fast route with food partners and one shorter completion loop.",
-        chips: ["Quick loop", "Food rewards", "3 stops"],
+        description: "A short lunchtime preview centered tightly around Montefiore Square with quick food-based checkpoints.",
+        summary: "Compact route with closely spaced food stops for a fast completion.",
+        chips: ["Compact route", "Food rewards", "3 stops"],
         hero: { time: "10 min", mode: "Standard", reward: "Food", stops: "3 stops" },
         steps: [
           "Begin at the Montefiore Square entry edge.",
-          "Stop at a quick-service coffee partner.",
-          "Finish at a convenience-style plaza edge stop."
+          "Make one short stop at a nearby food partner.",
+          "Finish on a quick return path."
         ],
         checkpoints: [
           { name: "Montefiore Square Entry", type: "Start", reward: "Session started", points: 0, lat: 40.82094, lng: -73.94952 },
-          { name: "Starbucks", type: "Checkpoint 1", reward: "10% off coffee", points: 20, lat: 40.82130, lng: -73.94895 },
-          { name: "Duane Reade", type: "Final Stop", reward: "Snack coupon", points: 30, lat: 40.82172, lng: -73.94832 }
+          { name: "Starbucks", type: "Checkpoint 1", reward: "10% off coffee", points: 20, lat: 40.82115, lng: -73.94910 },
+          { name: "Harlem Shake", type: "Final Stop", reward: "Quick lunch bonus", points: 32, lat: 40.82142, lng: -73.94858 }
         ]
       },
       "20-standard-food": {
         title: "20-Minute Discovery Route",
         description: "A balanced route focused in and around Montefiore Square with food-oriented checkpoints and comfortable walking flow.",
-        summary: "Balanced route with shade, seating adjacency, and food rewards from real destinations.",
-        chips: ["Shade prioritized", "Food rewards", "4 stops"],
+        summary: "Medium loop with shade, comfortable pacing, and food rewards from real destinations.",
+        chips: ["Discovery loop", "Food rewards", "4 stops"],
         hero: { time: "20 min", mode: "Standard", reward: "Food", stops: "4 stops" },
         steps: [
           "Start at Montefiore Square and begin verified movement.",
           "Reach Starbucks for a quick food reward checkpoint.",
-          "Continue to Harlem Shake as the primary destination stop.",
-          "Finish at Sylvia's Corner for a final bonus offer."
+          "Continue to Harlem Shake as the main destination stop.",
+          "Finish at Sylvia's Corner for a final meal offer."
         ],
         checkpoints: [
           { name: "Montefiore Square Entry", type: "Start", reward: "Session started", points: 0, lat: 40.82094, lng: -73.94952 },
-          { name: "Starbucks", type: "Checkpoint 1", reward: "10% off coffee", points: 25, lat: 40.82130, lng: -73.94895 },
+          { name: "Starbucks", type: "Checkpoint 1", reward: "10% off coffee", points: 25, lat: 40.82126, lng: -73.94900 },
           { name: "Harlem Shake", type: "Checkpoint 2", reward: "Free drink add-on", points: 35, lat: 40.82178, lng: -73.94818 },
           { name: "Sylvia's Corner", type: "Final Stop", reward: "15% off lunch combo", points: 55, lat: 40.82218, lng: -73.94752 }
         ]
       },
       "40-standard-food": {
         title: "40-Minute Full Plaza Route",
-        description: "A longer exploration route around Montefiore Square and its surrounding edges, built for deeper engagement and multiple food stops.",
-        summary: "Longer route with extended coverage, higher points, and more time for multiple destination visits.",
-        chips: ["Long loop", "High points", "Food rewards"],
-        hero: { time: "40 min", mode: "Standard", reward: "Food", stops: "4 stops" },
+        description: "A longer loop that stretches farther around the Montefiore Square area with more coverage and a fuller sequence of food-based destinations.",
+        summary: "Extended loop with more distance, more turns, and a higher-value final reward.",
+        chips: ["Extended loop", "High points", "5 stops"],
+        hero: { time: "40 min", mode: "Standard", reward: "Food", stops: "5 stops" },
         steps: [
-          "Walk a larger loop around the plaza perimeter.",
-          "Complete all food-oriented checkpoints.",
-          "Unlock a stronger end-of-route bonus."
+          "Begin at Montefiore Square and head north through the broader plaza edge.",
+          "Collect early food rewards at quick-service stops.",
+          "Curve east and then south through a longer return path.",
+          "Finish with a stronger final destination reward."
         ],
         checkpoints: [
           { name: "Montefiore Square Entry", type: "Start", reward: "Session started", points: 0, lat: 40.82094, lng: -73.94952 },
-          { name: "Starbucks", type: "Checkpoint 1", reward: "Coffee coupon", points: 25, lat: 40.82130, lng: -73.94895 },
-          { name: "Harlem Shake", type: "Checkpoint 2", reward: "Free drink add-on", points: 40, lat: 40.82178, lng: -73.94818 },
-          { name: "Sylvia's Corner", type: "Final Stop", reward: "Meal discount bonus", points: 65, lat: 40.82218, lng: -73.94752 }
+          { name: "Starbucks", type: "Checkpoint 1", reward: "Coffee coupon", points: 22, lat: 40.82134, lng: -73.94904 },
+          { name: "Harlem Shake", type: "Checkpoint 2", reward: "Free drink add-on", points: 34, lat: 40.82188, lng: -73.94810 },
+          { name: "Popeyes", type: "Checkpoint 3", reward: "Side-item offer", points: 46, lat: 40.82242, lng: -73.94722 },
+          { name: "Sylvia's Corner", type: "Final Stop", reward: "Meal discount bonus", points: 70, lat: 40.82156, lng: -73.94686 }
         ]
       },
       "20-slow-food": {
         title: "20-Minute Slow Pace Route",
-        description: "A lower-pressure route around Montefiore Square with easier pacing and food rewards placed at clearer, more comfortable stops.",
-        summary: "Comfort-focused route with easier pacing and accessible stop timing.",
-        chips: ["Slow pace", "Comfort stops", "Food rewards"],
+        description: "A lower-pressure route around Montefiore Square with shorter segments, gentler turns, and food rewards placed at comfortable intervals.",
+        summary: "Comfort-focused loop with slower pacing and closely connected stops.",
+        chips: ["Slow pace", "Comfort stops", "4 stops"],
         hero: { time: "20 min", mode: "Slow pace", reward: "Food", stops: "4 stops" },
         steps: [
           "Use the gentlest entry route into the square.",
-          "Pause between each stop at comfort zones.",
-          "Complete the sequence without strict timing pressure."
+          "Pause between each stop at a slower rhythm.",
+          "Complete a softer loop with less distance between checkpoints."
         ],
         checkpoints: [
           { name: "Montefiore Square Entry", type: "Start", reward: "Session started", points: 0, lat: 40.82094, lng: -73.94952 },
-          { name: "Starbucks", type: "Checkpoint 1", reward: "Coffee coupon", points: 20, lat: 40.82130, lng: -73.94895 },
-          { name: "Harlem Shake", type: "Checkpoint 2", reward: "Free drink add-on", points: 30, lat: 40.82178, lng: -73.94818 },
-          { name: "Sylvia's Corner", type: "Final Stop", reward: "Comfort route meal offer", points: 45, lat: 40.82218, lng: -73.94752 }
+          { name: "Starbucks", type: "Checkpoint 1", reward: "Coffee coupon", points: 18, lat: 40.82110, lng: -73.94914 },
+          { name: "Harlem Shake", type: "Checkpoint 2", reward: "Free drink add-on", points: 28, lat: 40.82146, lng: -73.94860 },
+          { name: "Sylvia's Corner", type: "Final Stop", reward: "Comfort route meal offer", points: 42, lat: 40.82178, lng: -73.94804 }
         ]
       },
       "20-wheelchair-food": {
         title: "20-Minute Accessible Route",
-        description: "A wheelchair-friendly route centered around Montefiore Square using the easiest circulation paths and accessible stops.",
-        summary: "Step-free route with easy visibility, wider movement paths, and accessible food rewards.",
-        chips: ["Accessible", "Wide circulation", "Food rewards"],
+        description: "A wheelchair-friendly route centered around Montefiore Square using straighter circulation, wider paths, and accessible food stops.",
+        summary: "Accessible route with straighter movement and reduced turning.",
+        chips: ["Accessible", "Wide circulation", "4 stops"],
         hero: { time: "20 min", mode: "Accessible", reward: "Food", stops: "4 stops" },
         steps: [
-          "Begin on the easiest accessible approach.",
-          "Use wide circulation and clearly visible stops.",
-          "Complete the sequence with accessible destinations."
+          "Begin on the clearest accessible approach.",
+          "Use straighter circulation paths between destinations.",
+          "Complete the route through easy-to-reach stops."
         ],
         checkpoints: [
           { name: "Montefiore Square Entry", type: "Start", reward: "Session started", points: 0, lat: 40.82094, lng: -73.94952 },
-          { name: "Starbucks", type: "Checkpoint 1", reward: "Coffee coupon", points: 20, lat: 40.82130, lng: -73.94895 },
-          { name: "Harlem Shake", type: "Checkpoint 2", reward: "Accessible drink reward", points: 30, lat: 40.82178, lng: -73.94818 },
-          { name: "Sylvia's Corner", type: "Final Stop", reward: "Meal bonus", points: 45, lat: 40.82218, lng: -73.94752 }
+          { name: "Starbucks", type: "Checkpoint 1", reward: "Coffee coupon", points: 20, lat: 40.82120, lng: -73.94918 },
+          { name: "Harlem Shake", type: "Checkpoint 2", reward: "Accessible drink reward", points: 30, lat: 40.82156, lng: -73.94870 },
+          { name: "Sylvia's Corner", type: "Final Stop", reward: "Meal bonus", points: 45, lat: 40.82194, lng: -73.94822 }
         ]
       },
       "20-standard-retail": {
         title: "20-Minute Retail Route",
-        description: "A route focused on store-based participation around Montefiore Square using retail-oriented real destinations.",
-        summary: "Retail-focused path with bookstore and pharmacy-style discounts instead of food-first rewards.",
+        description: "A store-focused route around Montefiore Square using retail-oriented real destinations and a slightly different eastward loop.",
+        summary: "Retail loop with bookstore, pharmacy, and tech-oriented stops.",
         chips: ["Retail offers", "Shopping route", "4 stops"],
         hero: { time: "20 min", mode: "Standard", reward: "Retail", stops: "4 stops" },
         steps: [
           "Begin at the square entry point.",
-          "Use retail-facing checkpoints instead of food-first stops.",
-          "Complete the route with store discounts and shopping offers."
+          "Move through store-facing checkpoints instead of food-first stops.",
+          "Finish on a retail loop with discounts and accessory offers."
         ],
         checkpoints: [
           { name: "Montefiore Square Entry", type: "Start", reward: "Session started", points: 0, lat: 40.82094, lng: -73.94952 },
-          { name: "Duane Reade", type: "Checkpoint 1", reward: "10% off essentials", points: 25, lat: 40.82112, lng: -73.94876 },
+          { name: "Duane Reade", type: "Checkpoint 1", reward: "10% off essentials", points: 25, lat: 40.82108, lng: -73.94898 },
           { name: "Word Up Books", type: "Checkpoint 2", reward: "15% off select books", points: 35, lat: 40.82164, lng: -73.94805 },
-          { name: "T-Mobile", type: "Final Stop", reward: "Accessory discount", points: 50, lat: 40.82205, lng: -73.94740 }
+          { name: "T-Mobile", type: "Final Stop", reward: "Accessory discount", points: 50, lat: 40.82220, lng: -73.94736 }
         ]
       },
       "20-standard-mixed": {
         title: "20-Minute Mixed Reward Route",
-        description: "A mixed route around Montefiore Square that blends food and retail incentives for broader engagement.",
+        description: "A mixed route around Montefiore Square that blends food and retail incentives in a crossover loop.",
         summary: "Hybrid route combining food offers, retail discounts, and a balanced destination mix.",
         chips: ["Mixed rewards", "Hybrid route", "4 stops"],
         hero: { time: "20 min", mode: "Standard", reward: "Mixed", stops: "4 stops" },
         steps: [
           "Start at the plaza entry and move through a mixed sequence.",
           "Alternate between a food stop and a retail stop.",
-          "End with a combined reward bundle."
+          "Finish with a combined reward bundle."
         ],
         checkpoints: [
           { name: "Montefiore Square Entry", type: "Start", reward: "Session started", points: 0, lat: 40.82094, lng: -73.94952 },
-          { name: "Starbucks", type: "Checkpoint 1", reward: "Coffee coupon", points: 20, lat: 40.82130, lng: -73.94895 },
+          { name: "Starbucks", type: "Checkpoint 1", reward: "Coffee coupon", points: 20, lat: 40.82126, lng: -73.94900 },
           { name: "Word Up Books", type: "Checkpoint 2", reward: "Book discount", points: 30, lat: 40.82164, lng: -73.94805 },
           { name: "Harlem Shake", type: "Final Stop", reward: "Mixed reward bonus", points: 55, lat: 40.82178, lng: -73.94818 }
         ]
@@ -1387,24 +1389,20 @@
       return `${minutes}-${pace}-${rewardType}`;
     }
 
+    function positionWalkerBadge(lat, lng) {
+      const point = map.latLngToContainerPoint([lat, lng]);
+      walkerBadge.style.display = "block";
+      walkerBadge.style.left = `${point.x}px`;
+      walkerBadge.style.top = `${point.y}px`;
+    }
+
     function moveWalkerTo(index) {
       const stop = currentConfig.checkpoints[index];
       if (!walkerMarker) return;
-
       walkerMarker.setStyle({ opacity: 1, fillOpacity: 1 });
       walkerMarker.setLatLng([stop.lat, stop.lng]);
       map.flyTo([stop.lat, stop.lng], 19, { duration: 0.8 });
-
-      const positions = [
-        { left: "24%", top: "76%" },
-        { left: "40%", top: "58%" },
-        { left: "57%", top: "46%" },
-        { left: "74%", top: "30%" }
-      ];
-      const pos = positions[index] || positions[positions.length - 1];
-      walkerBadge.style.display = "block";
-      walkerBadge.style.left = pos.left;
-      walkerBadge.style.top = pos.top;
+      positionWalkerBadge(stop.lat, stop.lng);
     }
 
     function handleStopClick(index) {
@@ -1427,14 +1425,20 @@
       stop.locked = false;
 
       if (index === 0) {
-        totalDistance += 0.1;
+        totalDistance += 0.08;
         mainNotice.className = "status blue show";
         mainNotice.textContent = "Route verified. Move to the next destination for your first confirmed checkpoint.";
         pushFeed("Route verified", "Movement tracking has started successfully from the Montefiore Square entry point.");
       } else {
         totalScans += 1;
         totalPoints += stop.points;
-        totalDistance += 0.3;
+
+        const previous = currentConfig.checkpoints[index - 1];
+        const dx = stop.lat - previous.lat;
+        const dy = stop.lng - previous.lng;
+        const segmentDistance = Math.sqrt(dx * dx + dy * dy) * 55;
+        totalDistance += Math.max(0.12, segmentDistance);
+
         businessVisits += 1;
         businessRewards += 1;
 
@@ -1646,6 +1650,15 @@
       reward.className = "reward-item";
       reward.innerHTML = `<span>Reward unlock #${appRewardCount}</span><strong>+15 pts</strong>`;
       rewardList.prepend(reward);
+    });
+
+    map.on("zoomend moveend", () => {
+      if (!walkerMarker) return;
+      const style = walkerMarker.options || {};
+      if ((style.opacity || 0) > 0) {
+        const latlng = walkerMarker.getLatLng();
+        positionWalkerBadge(latlng.lat, latlng.lng);
+      }
     });
 
     renderRouteConfig(currentConfigKey);
