@@ -151,6 +151,10 @@
       font-weight: 700;
       cursor: pointer;
       transition: 0.2s ease;
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
     }
 
     .tab-btn:hover,
@@ -158,6 +162,20 @@
       background: #edf5ff;
       border-color: #d6e8fb;
       color: var(--blue-3);
+    }
+
+    .tab-notif {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #ff4d4f;
+      box-shadow: 0 0 0 4px rgba(255, 77, 79, 0.16);
+      display: none;
+      flex: 0 0 auto;
+    }
+
+    .tab-notif.show {
+      display: inline-block;
     }
 
     .hero {
@@ -709,10 +727,16 @@
         </div>
       </div>
       <div class="tabs">
-        <button class="tab-btn active" data-panel="platform">Platform</button>
+        <button class="tab-btn active" data-panel="platform" id="platformTab">
+          Platform
+          <span class="tab-notif" id="platformNotif"></span>
+        </button>
         <button class="tab-btn" data-panel="proposal">Proposal</button>
         <button class="tab-btn" data-panel="images">Images</button>
-        <button class="tab-btn" data-panel="businesses">Businesses</button>
+        <button class="tab-btn" data-panel="businesses" id="businessTab">
+          Businesses
+          <span class="tab-notif" id="businessNotif"></span>
+        </button>
         <button class="tab-btn" data-panel="app">App</button>
       </div>
     </div>
@@ -1015,10 +1039,26 @@
     const tabButtons = document.querySelectorAll("[data-panel]");
     const panels = document.querySelectorAll(".panel");
 
+    const platformNotif = document.getElementById("platformNotif");
+    const businessNotif = document.getElementById("businessNotif");
+
+    function showTabNotification(type) {
+      if (type === "platform") platformNotif.classList.add("show");
+      if (type === "businesses") businessNotif.classList.add("show");
+    }
+
+    function clearTabNotification(type) {
+      if (type === "platform") platformNotif.classList.remove("show");
+      if (type === "businesses") businessNotif.classList.remove("show");
+    }
+
     function openPanel(id) {
       panels.forEach(panel => panel.classList.toggle("active", panel.id === id));
       tabButtons.forEach(btn => btn.classList.toggle("active", btn.dataset.panel === id));
       window.scrollTo({ top: 0, behavior: "smooth" });
+
+      if (id === "platform") clearTabNotification("platform");
+      if (id === "businesses") clearTabNotification("businesses");
     }
 
     tabButtons.forEach(btn => btn.addEventListener("click", () => openPanel(btn.dataset.panel)));
@@ -1380,6 +1420,8 @@
       }
 
       walkerBadge.style.display = "none";
+      clearTabNotification("platform");
+      clearTabNotification("businesses");
     }
 
     function getSelectedConfigKey() {
@@ -1449,6 +1491,27 @@
         mainNotice.textContent = `${stop.name} confirmed. Reward unlocked: ${stop.reward}.`;
 
         pushFeed(stop.name, `Checkpoint confirmed. +${stop.points} points. Reward: ${stop.reward}.`);
+
+        showTabNotification("platform");
+        showTabNotification("businesses");
+
+        const marker = pointMarkers[index];
+        if (marker) {
+          marker.setStyle({ color: "#22b573", fillColor: "#ffffff" });
+          L.popup()
+            .setLatLng([stop.lat, stop.lng])
+            .setContent(
+              `<strong>${stop.name}</strong><br/>Checkpoint reached.<br/><span style="color:#2d7fce;font-weight:700;">Check Platform and Businesses for updates.</span>`
+            )
+            .openOn(map);
+
+          setTimeout(() => {
+            marker.setStyle({
+              color: index === 0 ? "#17324f" : "#4b98ea",
+              fillColor: "#ffffff"
+            });
+          }, 900);
+        }
       }
 
       currentStep += 1;
