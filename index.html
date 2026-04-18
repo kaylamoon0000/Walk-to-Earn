@@ -4,71 +4,96 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>AI Walk-to-Earn Harlem | Platform Demo</title>
+
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@300;400;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+    crossorigin=""
+  />
+
   <style>
     :root {
-      --blue1: #5aa7f5;
-      --blue2: #4b98ea;
-      --blue3: #428be1;
-      --navy: #17324f;
-      --green: #25b878;
-      --gold: #f3bf4c;
-      --bg: #f6f9fc;
-      --card: #ffffff;
-      --line: #e5ebf3;
-      --text: #728094;
-      --heading: #546273;
-      --shadow: 0 18px 45px rgba(23, 50, 79, 0.08);
+      --bg: #f3f7fc;
+      --panel: rgba(255,255,255,0.92);
+      --panel-solid: #ffffff;
+      --soft: #f7fbff;
+      --line: #e3ebf5;
+      --text: #65758a;
+      --heading: #15263c;
+      --navy: #13243a;
+      --blue-1: #78c0ff;
+      --blue-2: #3f8fff;
+      --blue-3: #255fcb;
+      --green: #22b573;
+      --gold: #f0b748;
+      --red: #da6d6d;
+      --shadow: 0 24px 60px rgba(19, 36, 58, 0.09);
+      --radius-xl: 28px;
+      --radius-lg: 22px;
+      --radius-md: 18px;
+      --radius-sm: 14px;
     }
 
     * { box-sizing: border-box; }
     html { scroll-behavior: smooth; }
+
     body {
       margin: 0;
-      font-family: 'Source Sans 3', sans-serif;
-      background: var(--bg);
+      font-family: "Inter", sans-serif;
       color: var(--text);
-      line-height: 1.6;
+      background:
+        radial-gradient(circle at top left, #fbfdff 0%, #f5f9fe 30%, var(--bg) 75%);
+      line-height: 1.55;
       -webkit-text-size-adjust: none;
     }
-
-    img { display: block; max-width: 100%; }
-    button, select { font: inherit; }
-    a { color: inherit; text-decoration: none; }
 
     h1, h2, h3, h4 {
       margin: 0 0 0.8rem;
       color: var(--heading);
-      line-height: 1.15;
-      letter-spacing: -0.02em;
+      line-height: 1.08;
+      letter-spacing: -0.03em;
     }
 
-    h1 { font-size: clamp(2.5rem, 5vw, 4.2rem); font-weight: 700; }
-    h2 { font-size: clamp(1.8rem, 3vw, 2.6rem); font-weight: 700; }
-    h3 { font-size: 1.3rem; font-weight: 700; }
-    h4 { font-size: 1.02rem; font-weight: 700; }
-    p { margin: 0 0 1rem; font-size: 1.03rem; }
+    h1 { font-size: clamp(2.5rem, 4vw, 4.4rem); font-weight: 800; }
+    h2 { font-size: clamp(1.7rem, 2.5vw, 2.6rem); font-weight: 800; }
+    h3 { font-size: 1.15rem; font-weight: 700; }
+    h4 { font-size: 1rem; font-weight: 700; }
+
+    p {
+      margin: 0 0 1rem;
+      font-size: 0.98rem;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    button, select {
+      font: inherit;
+    }
 
     .container {
-      width: min(1280px, calc(100% - 24px));
+      width: min(1380px, calc(100% - 28px));
       margin: 0 auto;
     }
 
     .topbar {
       position: sticky;
       top: 0;
-      z-index: 1000;
-      background: rgba(255,255,255,0.9);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--line);
+      z-index: 3000;
+      border-bottom: 1px solid rgba(227, 235, 245, 0.9);
+      background: rgba(255,255,255,0.8);
+      backdrop-filter: blur(16px);
     }
 
     .topbar-inner {
-      min-height: 76px;
+      min-height: 78px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -78,55 +103,71 @@
     .brand {
       display: flex;
       align-items: center;
-      gap: 12px;
-      color: var(--navy);
-      font-weight: 700;
+      gap: 14px;
+      min-width: 0;
     }
 
     .brand-mark {
-      width: 42px;
-      height: 42px;
-      border-radius: 14px;
+      width: 46px;
+      height: 46px;
+      border-radius: 15px;
       display: grid;
       place-items: center;
       color: white;
-      background: linear-gradient(135deg, var(--blue1), var(--blue3));
+      background: linear-gradient(135deg, var(--blue-1), var(--blue-3));
       box-shadow: var(--shadow);
       flex: 0 0 auto;
     }
 
-    .nav-tabs {
+    .brand-copy {
+      min-width: 0;
+    }
+
+    .brand-title {
+      color: var(--navy);
+      font-weight: 800;
+      font-size: 1.05rem;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-sub {
+      color: #8292a5;
+      font-size: 0.82rem;
+      font-weight: 600;
+    }
+
+    .tabs {
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
     }
 
-    .nav-tab {
+    .tab-btn {
+      border: 1px solid transparent;
+      background: transparent;
+      color: #66768c;
       padding: 10px 14px;
       border-radius: 999px;
-      border: 1px solid transparent;
-      color: #627184;
       font-weight: 700;
       cursor: pointer;
-      background: transparent;
       transition: 0.2s ease;
     }
 
-    .nav-tab:hover,
-    .nav-tab.active {
-      background: #eef5ff;
-      border-color: #d5e6fb;
-      color: var(--blue3);
+    .tab-btn:hover,
+    .tab-btn.active {
+      background: #edf5ff;
+      border-color: #d6e8fb;
+      color: var(--blue-3);
     }
 
     .hero {
-      background:
-        radial-gradient(circle at top right, rgba(255,255,255,0.18), transparent 30%),
-        repeating-linear-gradient(55deg, rgba(255,255,255,0.08) 0px, rgba(255,255,255,0.08) 1px, transparent 1px, transparent 220px),
-        repeating-linear-gradient(55deg, rgba(255,255,255,0.045) 0px, rgba(255,255,255,0.045) 1px, transparent 1px, transparent 360px),
-        linear-gradient(135deg, var(--blue1) 0%, var(--blue2) 45%, var(--blue3) 100%);
+      position: relative;
+      overflow: hidden;
       color: white;
-      padding: 56px 0 34px;
+      padding: 54px 0 28px;
+      background:
+        radial-gradient(circle at top right, rgba(255,255,255,0.2), transparent 28%),
+        linear-gradient(135deg, #7dc7ff 0%, #4b95ff 46%, #2866d6 100%);
     }
 
     .hero-grid {
@@ -136,32 +177,32 @@
       align-items: stretch;
     }
 
-    .eyebrow {
+    .hero-badge {
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      background: rgba(255,255,255,0.14);
-      border: 1px solid rgba(255,255,255,0.18);
-      border-radius: 999px;
       padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.16);
+      border: 1px solid rgba(255,255,255,0.18);
       font-weight: 700;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
 
     .hero p {
-      color: rgba(255,255,255,0.84);
-      font-size: 1.14rem;
-      max-width: 46rem;
+      color: rgba(255,255,255,0.9);
+      font-size: 1.03rem;
+      max-width: 48rem;
     }
 
-    .hero-subtitle {
-      font-size: 1.08rem;
-      color: rgba(255,255,255,0.95);
+    .hero-preview {
+      font-size: 1rem;
       font-weight: 700;
-      margin-bottom: 8px;
+      color: rgba(255,255,255,0.95);
+      margin-bottom: 10px;
     }
 
-    .button-row {
+    .hero-actions {
       display: flex;
       flex-wrap: wrap;
       gap: 12px;
@@ -169,155 +210,132 @@
     }
 
     .button {
-      border: 0;
-      border-radius: 14px;
-      min-height: 52px;
+      min-height: 50px;
       padding: 0 18px;
+      border-radius: 14px;
+      border: 0;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       gap: 10px;
-      font-weight: 700;
       cursor: pointer;
-      transition: transform 0.2s ease, background 0.2s ease;
+      font-weight: 700;
+      transition: transform 0.2s ease, opacity 0.2s ease, background 0.2s ease;
     }
 
-    .button:hover { transform: translateY(-1px); }
-    .button.primary { background: white; color: var(--blue3); }
-    .button.ghost { background: rgba(255,255,255,0.10); color: white; border: 1px solid rgba(255,255,255,0.24); }
-    .button.dark { background: var(--navy); color: white; }
-    .button.green { background: var(--green); color: white; }
-    .button.soft { background: #edf5ff; color: var(--blue3); }
+    .button:hover {
+      transform: translateY(-1px);
+    }
+
+    .button.primary {
+      background: white;
+      color: var(--blue-3);
+    }
+
+    .button.ghost {
+      background: rgba(255,255,255,0.12);
+      color: white;
+      border: 1px solid rgba(255,255,255,0.22);
+    }
+
+    .button.dark {
+      background: var(--navy);
+      color: white;
+    }
+
+    .button.green {
+      background: var(--green);
+      color: white;
+    }
+
+    .button.soft {
+      background: #edf5ff;
+      color: var(--blue-3);
+    }
 
     .hero-panel {
-      background: rgba(255,255,255,0.12);
-      border: 1px solid rgba(255,255,255,0.16);
-      border-radius: 24px;
+      border-radius: var(--radius-xl);
       padding: 16px;
-      box-shadow: 0 18px 45px rgba(15, 36, 57, 0.16);
+      background: rgba(255,255,255,0.14);
+      border: 1px solid rgba(255,255,255,0.18);
+      box-shadow: 0 25px 70px rgba(15, 33, 56, 0.14);
     }
 
-    .app-shell {
-      background: white;
-      border-radius: 24px;
-      padding: 16px;
-      color: #5d6c7e;
+    .summary-shell {
       height: 100%;
+      border-radius: var(--radius-lg);
+      padding: 16px;
+      background: white;
+      color: var(--text);
     }
 
-    .app-head {
+    .summary-head {
       display: flex;
-      align-items: center;
       justify-content: space-between;
       gap: 12px;
-      font-weight: 700;
+      align-items: center;
       color: var(--navy);
-      margin-bottom: 14px;
+      font-weight: 700;
+      margin-bottom: 12px;
     }
 
-    .hero-stats {
+    .summary-grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 10px;
-      margin-top: 12px;
     }
 
-    .hero-stat {
-      background: #f5f9fe;
-      border-radius: 14px;
+    .summary-card {
+      background: #f6f9fd;
+      border-radius: 16px;
       padding: 12px;
     }
 
-    .hero-stat strong {
+    .summary-card strong {
       display: block;
-      font-size: 1.1rem;
       color: var(--navy);
+      font-size: 1.05rem;
+      margin-bottom: 4px;
     }
 
     .page {
       padding: 18px 0 34px;
     }
 
-    .panel { display: none; }
-    .panel.active { display: block; }
+    .panel {
+      display: none;
+    }
+
+    .panel.active {
+      display: block;
+    }
 
     .card {
-      background: var(--card);
+      background: var(--panel-solid);
       border: 1px solid var(--line);
-      border-radius: 24px;
+      border-radius: var(--radius-xl);
       box-shadow: var(--shadow);
       padding: 18px;
       margin-bottom: 16px;
     }
 
-    .grid {
-      display: grid;
-      gap: 16px;
-    }
-
-    .grid.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .grid.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-
-    .pill-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 12px;
-    }
-
-    .pill,
-    .session-metric {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 12px;
-      border-radius: 999px;
-      border: 1px solid #dbe8f4;
-      background: #f7fbff;
-      color: var(--navy);
-      font-weight: 700;
-      font-size: 0.92rem;
-    }
-
-    .split-header {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-      text-align: center;
-      font-weight: 700;
-      color: var(--heading);
-      margin-bottom: 8px;
-    }
-
-    .compare-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 16px;
-    }
-
-    .compare-grid img {
-      width: 100%;
-      height: 260px;
-      object-fit: cover;
-      border-radius: 18px;
-      border: 1px solid var(--line);
-      background: #eef4fb;
-    }
-
     .platform-layout {
       display: grid;
-      grid-template-columns: 300px minmax(0, 1fr) 320px;
+      grid-template-columns: 320px minmax(0, 1fr) 340px;
       gap: 16px;
       align-items: start;
     }
 
-    .form-group + .form-group { margin-top: 14px; }
+    .form-group + .form-group {
+      margin-top: 14px;
+    }
 
     .form-group label {
       display: block;
-      font-weight: 700;
-      color: var(--navy);
       margin-bottom: 6px;
+      color: var(--navy);
+      font-weight: 700;
+      font-size: 0.93rem;
     }
 
     select {
@@ -325,13 +343,158 @@
       min-height: 50px;
       padding: 0 14px;
       border-radius: 14px;
-      border: 1px solid #d7e2ee;
+      border: 1px solid #d6e2ef;
       background: white;
-      color: #566170;
+      color: #536276;
     }
 
+    .metric-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .metric-pill,
+    .map-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid #dce7f3;
+      background: #f8fbff;
+      color: var(--navy);
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+
+    .status {
+      display: none;
+      border-radius: 16px;
+      padding: 12px 14px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .status.show { display: block; }
+    .status.blue { background: #edf5ff; color: #2d7fce; }
+    .status.green { background: rgba(36,182,117,0.12); color: #147b52; }
+    .status.red { background: rgba(218,109,109,0.12); color: #b44d4d; }
+
+    .feed,
+    .route-steps,
+    .stop-list,
+    .reward-list,
+    .leaderboard,
+    .image-grid {
+      display: grid;
+      gap: 10px;
+    }
+
+    .feed-item,
+    .route-step,
+    .stop-card,
+    .reward-item,
+    .leaderboard li,
+    .dashboard-card,
+    .impact-card {
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 13px 14px;
+    }
+
+    .route-step,
+    .stop-card,
+    .reward-item,
+    .leaderboard li {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .route-left,
+    .stop-left {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .step-badge,
+    .stop-badge {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+      background: #edf5ff;
+      color: var(--blue-3);
+      font-weight: 800;
+      font-size: 0.9rem;
+    }
+
+    .stop-card {
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .stop-card:hover {
+      transform: translateY(-1px);
+    }
+
+    .stop-card.locked {
+      opacity: 0.56;
+    }
+
+    .stop-card.active {
+      border-color: #9dc8f3;
+      box-shadow: 0 10px 24px rgba(75,152,234,0.12);
+    }
+
+    .stop-card.done {
+      border-color: rgba(36,182,117,0.42);
+      background: #fbfffd;
+    }
+
+    .stop-name {
+      color: var(--navy);
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+
+    .stop-meta-text {
+      font-size: 0.87rem;
+      color: #8794a5;
+    }
+
+    .tag,
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .tag {
+      background: #eef5ff;
+      color: #2d7fce;
+      padding: 4px 8px;
+      font-size: 0.78rem;
+    }
+
+    .badge.green { background: rgba(36,182,117,0.12); color: #147b52; }
+    .badge.gold { background: rgba(240,183,72,0.18); color: #8c6708; }
+    .badge.blue { background: rgba(75,152,234,0.14); color: #2d7fce; }
+
     .map-shell {
-      background: linear-gradient(180deg, #f8fbff, #eef5fc);
+      background: linear-gradient(180deg, #f9fbff, #eef5fc);
       border: 1px solid #dce7f3;
       border-radius: 22px;
       padding: 16px;
@@ -346,16 +509,21 @@
       flex-wrap: wrap;
     }
 
-    .map-title-block p { margin-bottom: 0; }
+    .map-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
 
     .live-map {
       position: relative;
-      height: 620px;
-      min-height: 620px;
-      border-radius: 18px;
+      height: 660px;
+      min-height: 660px;
       overflow: hidden;
-      background: #dfeaf5;
+      border-radius: 18px;
       border: 1px solid #dce7f3;
+      background: #dfeaf5;
     }
 
     #leafletMap {
@@ -376,163 +544,11 @@
       height: 16px;
       border-radius: 50%;
       background: var(--navy);
-      box-shadow: 0 0 0 5px rgba(23,50,79,0.14);
+      box-shadow: 0 0 0 5px rgba(19,38,63,0.14);
       transform: translate(-50%, -50%);
       pointer-events: none;
       display: none;
     }
-
-    .map-label {
-      position: absolute;
-      z-index: 500;
-      background: rgba(255,255,255,0.92);
-      color: #5a7088;
-      border: 1px solid rgba(220,231,243,0.95);
-      box-shadow: 0 8px 20px rgba(23,50,79,0.08);
-      border-radius: 999px;
-      padding: 6px 10px;
-      font-size: 0.8rem;
-      font-weight: 700;
-      pointer-events: none;
-    }
-
-    .feed {
-      display: grid;
-      gap: 12px;
-    }
-
-    .feed-item,
-    .business-card,
-    .mini-card {
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      background: white;
-      padding: 14px;
-    }
-
-    .notification {
-      display: none;
-      border-radius: 16px;
-      padding: 12px 14px;
-      font-weight: 700;
-      margin-bottom: 12px;
-    }
-
-    .notification.show { display: block; }
-    .notification.blue { background: #edf5ff; color: #2d7fce; }
-    .notification.green { background: rgba(37,184,120,0.12); color: #128055; }
-    .notification.red { background: rgba(229,109,109,0.12); color: #b74e4e; }
-
-    .route-steps,
-    .checkpoint-list,
-    .reward-list { display: grid; gap: 10px; }
-
-    .route-step,
-    .stop-card,
-    .reward-item {
-      padding: 12px 14px;
-      border-radius: 14px;
-      background: white;
-      border: 1px solid var(--line);
-      display: flex;
-      gap: 12px;
-      align-items: flex-start;
-      justify-content: space-between;
-    }
-
-    .route-step-left,
-    .stop-left {
-      display: flex;
-      gap: 12px;
-      align-items: flex-start;
-    }
-
-    .route-step-number,
-    .stop-number {
-      flex: 0 0 auto;
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      display: grid;
-      place-items: center;
-      background: #edf5ff;
-      color: var(--blue3);
-      font-weight: 700;
-    }
-
-    .stop-card.active {
-      border-color: #9bc3ee;
-      box-shadow: 0 8px 20px rgba(75,152,234,0.10);
-    }
-
-    .stop-card.done {
-      border-color: rgba(37,184,120,0.45);
-      background: #fbfffd;
-    }
-
-    .stop-card.locked {
-      opacity: 0.62;
-    }
-
-    .stop-name {
-      color: var(--navy);
-      font-weight: 700;
-      margin-bottom: 2px;
-    }
-
-    .stop-meta {
-      font-size: 0.88rem;
-      color: #8795a6;
-    }
-
-    .stop-tag {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 4px 8px;
-      border-radius: 999px;
-      background: #eef5ff;
-      color: #2d7fce;
-      font-size: 0.78rem;
-      font-weight: 700;
-    }
-
-    .store-filter {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 8px;
-    }
-
-    .filter-btn {
-      background: white;
-      border: 1px solid #d6e3ef;
-      border-radius: 999px;
-      color: #5e6d7f;
-      font-weight: 700;
-      padding: 10px 14px;
-      cursor: pointer;
-    }
-
-    .filter-btn.active {
-      background: #eef5ff;
-      border-color: #bfd6f3;
-      color: var(--blue3);
-    }
-
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 6px 10px;
-      border-radius: 999px;
-      font-size: 0.84rem;
-      font-weight: 700;
-    }
-
-    .badge.green { background: rgba(37,184,120,0.12); color: #128055; }
-    .badge.gold { background: rgba(243,191,76,0.16); color: #94680f; }
-    .badge.blue { background: rgba(90,167,245,0.14); color: #2d7fce; }
 
     .topline {
       display: flex;
@@ -547,84 +563,138 @@
       list-style: none;
       padding: 0;
       margin: 0;
-      display: grid;
-      gap: 10px;
     }
 
-    .leaderboard li {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      border-radius: 14px;
-      border: 1px solid var(--line);
-      background: #f8fbff;
-      padding: 12px 14px;
-    }
-
-    .clean { margin: 0; padding-left: 18px; }
-    .clean li { margin-bottom: 8px; }
-
-    .demo-grid {
+    .grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
       gap: 16px;
     }
 
+    .grid.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
+    .store-filter {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .filter-btn {
+      border: 1px solid #d7e4ef;
+      background: white;
+      color: #5f6d7e;
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .filter-btn.active {
+      background: #eef5ff;
+      border-color: #bfd6f3;
+      color: var(--blue-3);
+    }
+
+    .image-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .image-grid img {
+      width: 100%;
+      height: 280px;
+      object-fit: cover;
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: #eef4fb;
+    }
+
+    .split-headings {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      text-align: center;
+      margin-bottom: 10px;
+      font-weight: 700;
+      color: var(--heading);
+    }
+
     .phone-demo {
+      background: white;
       border: 1px solid var(--line);
       border-radius: 22px;
       overflow: hidden;
-      background: white;
     }
 
-    .phone-demo-head {
+    .phone-head {
       padding: 16px;
       color: white;
-      background: linear-gradient(135deg, var(--blue1), var(--blue3));
+      background: linear-gradient(135deg, var(--blue-1), var(--blue-3));
     }
 
-    .phone-demo-body { padding: 16px; }
-    .muted { color: #8795a6; }
+    .phone-body {
+      padding: 16px;
+    }
+
+    .muted {
+      color: #8794a5;
+    }
 
     .footer-note {
       text-align: center;
+      color: #94a2b3;
       padding: 0 0 34px;
-      color: #93a1b1;
     }
 
-    @media (max-width: 1180px) {
-      .platform-layout { grid-template-columns: 1fr; }
+    @media (max-width: 1240px) {
+      .platform-layout {
+        grid-template-columns: 1fr;
+      }
     }
 
-    @media (max-width: 1080px) {
+    @media (max-width: 980px) {
       .hero-grid,
-      .demo-grid,
-      .grid.three { grid-template-columns: 1fr 1fr; }
-    }
-
-    @media (max-width: 900px) {
-      .hero-grid,
-      .demo-grid,
       .grid.two,
       .grid.three,
-      .compare-grid { grid-template-columns: 1fr; }
+      .image-grid,
+      .summary-grid {
+        grid-template-columns: 1fr;
+      }
+
       .topbar-inner {
         flex-direction: column;
         align-items: flex-start;
         padding: 12px 0;
       }
-      .live-map { height: 520px; min-height: 520px; }
+
+      .live-map {
+        height: 540px;
+        min-height: 540px;
+      }
     }
 
     @media (max-width: 640px) {
-      .container { width: calc(100% - 16px); }
-      .hero { padding-top: 42px; }
-      .button-row { flex-direction: column; }
-      .button { width: 100%; }
-      .hero-stats,
-      .split-header { grid-template-columns: 1fr; }
-      .live-map { height: 500px; min-height: 500px; }
+      .container {
+        width: calc(100% - 16px);
+      }
+
+      .hero {
+        padding-top: 42px;
+      }
+
+      .button-row,
+      .hero-actions {
+        flex-direction: column;
+      }
+
+      .button {
+        width: 100%;
+      }
+
+      .live-map {
+        height: 480px;
+        min-height: 480px;
+      }
     }
   </style>
 </head>
@@ -633,14 +703,17 @@
     <div class="container topbar-inner">
       <div class="brand">
         <div class="brand-mark"><i class="fa-solid fa-route"></i></div>
-        <div>AI Walk-to-Earn Harlem</div>
+        <div class="brand-copy">
+          <div class="brand-title">AI Walk-to-Earn Harlem</div>
+          <div class="brand-sub">Interactive platform concept</div>
+        </div>
       </div>
-      <div class="nav-tabs">
-        <button class="nav-tab active" data-panel="experience">Platform</button>
-        <button class="nav-tab" data-panel="proposal">Proposal</button>
-        <button class="nav-tab" data-panel="compare">Images</button>
-        <button class="nav-tab" data-panel="business">Businesses</button>
-        <button class="nav-tab" data-panel="app">App</button>
+      <div class="tabs">
+        <button class="tab-btn active" data-panel="platform">Platform</button>
+        <button class="tab-btn" data-panel="proposal">Proposal</button>
+        <button class="tab-btn" data-panel="images">Images</button>
+        <button class="tab-btn" data-panel="businesses">Businesses</button>
+        <button class="tab-btn" data-panel="app">App</button>
       </div>
     </div>
   </nav>
@@ -648,26 +721,27 @@
   <header class="hero">
     <div class="container hero-grid">
       <div>
-        <div class="eyebrow"><i class="fa-solid fa-sparkles"></i> Full platform demo</div>
+        <div class="hero-badge"><i class="fa-solid fa-sparkles"></i> Refined interactive platform</div>
         <h1>AI Walk-to-Earn Harlem Platform</h1>
-        <div class="hero-subtitle" id="heroRoutePreview">Current preview: 20-Minute Discovery Route</div>
-        <p id="heroDescription">This platform simulates what your portfolio promises: interactive maps, visual checkpoints, session tracking, QR-style confirmations, reward logic, business participation, and leaderboards — plus minimal tabs that explain the proposal and show the redesign images.</p>
-        <div class="button-row">
-          <button class="button primary" data-open-panel="experience"><i class="fa-solid fa-map-location-dot"></i> Open Platform</button>
-          <button class="button ghost" data-open-panel="compare"><i class="fa-solid fa-image"></i> View Images</button>
+        <div class="hero-preview" id="heroRoutePreview">Current preview: 20-Minute Discovery Route</div>
+        <p id="heroDescription">A cohesive experience that unifies route generation, map navigation, synchronized checkpoints, reward unlocking, business participation, and leaderboard tracking around Montefiore Square.</p>
+        <div class="hero-actions">
+          <button class="button primary" data-open-panel="platform"><i class="fa-solid fa-map-location-dot"></i> Open Platform</button>
+          <button class="button ghost" data-open-panel="images"><i class="fa-solid fa-image"></i> View Images</button>
         </div>
       </div>
+
       <div class="hero-panel">
-        <div class="app-shell">
-          <div class="app-head">
+        <div class="summary-shell">
+          <div class="summary-head">
             <span>Session Summary</span>
-            <span><i class="fa-solid fa-location-dot"></i> Montefiore Square Area</span>
+            <span><i class="fa-solid fa-location-dot"></i> Montefiore Square</span>
           </div>
-          <div class="hero-stats">
-            <div class="hero-stat"><strong id="heroMetricTime">20 min</strong> route length</div>
-            <div class="hero-stat"><strong id="heroMetricMode">Standard</strong> movement mode</div>
-            <div class="hero-stat"><strong id="heroMetricReward">Food</strong> reward profile</div>
-            <div class="hero-stat"><strong id="heroMetricStops">4 stops</strong> verified checkpoints</div>
+          <div class="summary-grid">
+            <div class="summary-card"><strong id="heroMetricTime">20 min</strong>route length</div>
+            <div class="summary-card"><strong id="heroMetricMode">Standard</strong>movement mode</div>
+            <div class="summary-card"><strong id="heroMetricReward">Food</strong>reward profile</div>
+            <div class="summary-card"><strong id="heroMetricStops">4 stops</strong>verified checkpoints</div>
           </div>
         </div>
       </div>
@@ -675,16 +749,17 @@
   </header>
 
   <main class="page container">
-    <section class="panel active" id="experience">
+    <section class="panel active" id="platform">
       <div class="card">
-        <h2>Interactive Platform</h2>
-        <p>This is the working core of the concept. Build a route, start the session, and complete real stop cards in order while exploring a live map centered around Montefiore Square. The route preview, title, summary, stop names, and reward types all update when you change your preferences.</p>
+        <h2>Platform</h2>
+        <p>Everything here is linked together. Change the route settings and the preview, route title, summary, map path, stop list, and checkpoints all update together. Start a session and the feed, impact, and score respond live.</p>
       </div>
 
       <div class="platform-layout">
         <div>
           <div class="card">
             <h3>Route Builder</h3>
+
             <div class="form-group">
               <label for="minutes">Time available</label>
               <select id="minutes">
@@ -693,6 +768,7 @@
                 <option value="40">40 minutes</option>
               </select>
             </div>
+
             <div class="form-group">
               <label for="pace">Walking mode</label>
               <select id="pace">
@@ -701,6 +777,7 @@
                 <option value="wheelchair">Wheelchair-friendly</option>
               </select>
             </div>
+
             <div class="form-group">
               <label for="rewardType">Reward preference</label>
               <select id="rewardType">
@@ -709,23 +786,25 @@
                 <option value="mixed">Mixed rewards</option>
               </select>
             </div>
+
             <div class="button-row">
-              <button class="button soft" id="buildRoute"><i class="fa-solid fa-wand-magic-sparkles"></i> Build</button>
-              <button class="button green" id="startWalk"><i class="fa-solid fa-play"></i> Start</button>
+              <button class="button soft" id="buildRoute"><i class="fa-solid fa-wand-magic-sparkles"></i> Build Route</button>
+              <button class="button green" id="startWalk"><i class="fa-solid fa-play"></i> Start Session</button>
               <button class="button dark" id="resetWalk"><i class="fa-solid fa-rotate-left"></i> Reset</button>
             </div>
-            <div class="pill-row">
-              <span class="pill"><i class="fa-solid fa-route"></i> <span id="metricDistance">0.0 mi</span></span>
-              <span class="pill"><i class="fa-solid fa-qrcode"></i> <span id="metricScans">0 scans</span></span>
-              <span class="pill"><i class="fa-solid fa-star"></i> <span id="metricPoints">0 pts</span></span>
+
+            <div class="metric-row">
+              <span class="metric-pill"><i class="fa-solid fa-route"></i><span id="metricDistance">0.0 mi</span></span>
+              <span class="metric-pill"><i class="fa-solid fa-qrcode"></i><span id="metricScans">0 scans</span></span>
+              <span class="metric-pill"><i class="fa-solid fa-star"></i><span id="metricPoints">0 pts</span></span>
             </div>
           </div>
 
           <div class="card">
             <h3>Session Feed</h3>
-            <div class="notification blue show" id="mainNotice">Build a route first. Then start the walk to activate the stops and map tracking.</div>
+            <div class="status blue show" id="mainNotice">Build a route first. Then start the session to activate the stops and tracking.</div>
             <div class="feed" id="liveFeed">
-              <div class="feed-item"><strong>How this works</strong><br />Start the session, then click the start stop and continue through the listed checkpoints in order. The map follows your movement and the businesses change based on your selected reward interest.</div>
+              <div class="feed-item"><strong>How it works</strong><br />The route settings change the whole experience. Start the session, then complete the stops in order to progress.</div>
             </div>
           </div>
         </div>
@@ -733,21 +812,20 @@
         <div>
           <div class="map-shell">
             <div class="map-head">
-              <div class="map-title-block">
+              <div>
                 <h3 id="routeTitle">20-Minute Discovery Route</h3>
-                <p id="routeSummary">A balanced route that prioritizes shade, safe movement, and food rewards at active Harlem businesses near Montefiore Square.</p>
+                <p id="routeSummary">A balanced route around Montefiore Square that prioritizes walkability, smooth movement, and food-based rewards from real destinations.</p>
               </div>
-              <div class="pill-row" style="margin-top:0;">
-                <span class="session-metric"><i class="fa-solid fa-sun"></i><span id="chipA">Shade prioritized</span></span>
-                <span class="session-metric"><i class="fa-solid fa-store"></i><span id="chipB">Food rewards</span></span>
-                <span class="session-metric"><i class="fa-solid fa-road"></i><span id="chipC">4 stops</span></span>
+
+              <div class="map-meta">
+                <span class="map-chip"><i class="fa-solid fa-sun"></i><span id="chipA">Shade prioritized</span></span>
+                <span class="map-chip"><i class="fa-solid fa-store"></i><span id="chipB">Food rewards</span></span>
+                <span class="map-chip"><i class="fa-solid fa-road"></i><span id="chipC">4 stops</span></span>
               </div>
             </div>
 
             <div class="live-map">
               <div id="leafletMap"></div>
-              <div class="map-label" style="left:6%; top:8%;">Montefiore Square</div>
-              <div class="map-label" style="left:72%; top:12%;">Food + Retail Cluster</div>
               <div class="walker-badge" id="walkerBadge"></div>
             </div>
           </div>
@@ -762,9 +840,9 @@
           <div class="card">
             <div class="topline">
               <h3>Active Stops</h3>
-              <span class="badge blue"><i class="fa-solid fa-location-dot"></i> Click in order</span>
+              <span class="badge blue"><i class="fa-solid fa-location-dot"></i> synced to map</span>
             </div>
-            <div class="checkpoint-list" id="checkpointList"></div>
+            <div class="stop-list" id="checkpointList"></div>
           </div>
 
           <div class="card">
@@ -782,16 +860,16 @@
 
           <div class="card">
             <div class="topline">
-              <h3>Business Outcomes</h3>
-              <span class="badge green"><i class="fa-solid fa-store"></i> Live impact</span>
+              <h3>Business Impact</h3>
+              <span class="badge green"><i class="fa-solid fa-store"></i> live outcome</span>
             </div>
-            <div class="mini-card">
+            <div class="impact-card">
               <strong id="impactBusiness">No active business yet</strong><br />
-              <span class="muted" id="impactMessage">No verified stops yet. Start the route to generate business activity.</span>
+              <span class="muted" id="impactMessage">Start the route and complete a verified stop to generate live impact.</span>
             </div>
-            <div class="pill-row" style="margin-top:12px;">
-              <span class="pill"><i class="fa-solid fa-chart-line"></i><span id="impactVisits">0 visits</span></span>
-              <span class="pill"><i class="fa-solid fa-ticket"></i><span id="impactRewards">0 rewards</span></span>
+            <div class="metric-row">
+              <span class="metric-pill"><i class="fa-solid fa-chart-line"></i><span id="impactVisits">0 visits</span></span>
+              <span class="metric-pill"><i class="fa-solid fa-ticket"></i><span id="impactRewards">0 rewards</span></span>
             </div>
           </div>
         </div>
@@ -801,42 +879,44 @@
     <section class="panel" id="proposal">
       <div class="card">
         <h2>Proposal</h2>
-        <p><strong>AI Walk-to-Earn Harlem</strong> is a public-space activation platform designed to increase pedestrian movement, support small businesses, and improve the experience of Harlem Plaza. The project combines route personalization, walking verification, landmark checkpoints, and reward systems in one user-friendly experience.</p>
+        <p><strong>AI Walk-to-Earn Harlem</strong> is a public-space activation platform designed to increase pedestrian movement, support small businesses, and improve the experience around Montefiore Square. It combines route personalization, walking verification, checkpoints, and reward systems in one unified flow.</p>
       </div>
 
       <div class="grid two">
         <div class="card">
           <h3>Project Overview</h3>
-          <p>The platform rewards users for walking along recommended plaza routes, reaching checkpoints near local businesses, and verifying those visits through QR-style interactions. Its goal is to transform the plaza from a pass-through space into an active destination where movement, public health, and local economic activity reinforce one another.</p>
+          <p>The platform rewards users for walking along recommended routes, reaching checkpoints near businesses, and verifying those visits through QR-style interactions. The goal is to transform the space from a pass-through corridor into an active public destination.</p>
         </div>
         <div class="card">
           <h3>Problem Definition</h3>
-          <p>Many plazas feel underused because they do not provide strong reasons to stay, explore, or interact with nearby businesses. Small businesses may sit next to foot traffic without truly benefiting from it. This platform addresses that gap by making walking visible, measurable, and rewarding.</p>
+          <p>Many public spaces do not create strong reasons to stay, explore, or support nearby stores. This platform responds by making movement visible, measurable, and directly tied to local business participation.</p>
         </div>
       </div>
 
       <div class="grid two">
         <div class="card">
           <h3>Site / Context</h3>
-          <p>The design responds to movement patterns, comfort zones, safety, accessibility, use patterns, and business activity. Direct paths become guided loops, underused corners become checkpoint destinations, and nearby storefronts become active parts of the pedestrian experience.</p>
+          <p>The design responds to movement patterns, accessibility, comfort, safety, and business activity. Direct paths become guided routes, and nearby storefronts become active parts of the public-space experience.</p>
         </div>
         <div class="card">
-          <h3>Final Redesign Proposal</h3>
-          <p>The selected direction combines route guidance, checkpoint verification, and reward personalization. Users see a clear path, businesses get measurable participation data, and the plaza gains a stronger public identity through visible activity and destination-based walking.</p>
+          <h3>Final Proposal</h3>
+          <p>The chosen direction combines route guidance, real business checkpoints, reward personalization, and a trackable user journey. Businesses gain measurable participation data while users gain a more engaging walking experience.</p>
         </div>
       </div>
     </section>
 
-    <section class="panel" id="compare">
+    <section class="panel" id="images">
       <div class="card">
         <h2>Images</h2>
-        <p>This tab keeps the image explanation simple. The before images show existing or underperforming conditions, while the after images represent an activated plaza with clearer routes, checkpoint destinations, and stronger small-business visibility.</p>
+        <p>This tab keeps the visual explanation minimal. The before images show existing or underperforming conditions, while the after images show a more activated space with stronger pedestrian use and local-business integration.</p>
       </div>
-      <div class="split-header">
+
+      <div class="split-headings">
         <div>Before</div>
         <div>After</div>
       </div>
-      <div class="compare-grid">
+
+      <div class="image-grid">
         <img src="image/image1.png" alt="Before image 1" />
         <img src="image/image2.png" alt="After image 1" />
         <img src="image/image3.png" alt="Before image 2" />
@@ -848,10 +928,10 @@
       </div>
     </section>
 
-    <section class="panel" id="business">
+    <section class="panel" id="businesses">
       <div class="card">
-        <h2>Business Dashboard</h2>
-        <p>This section shows how different local partners would see the platform. Select a business to switch the dashboard and view how route placement, reward type, and expected ROI could differ across stores.</p>
+        <h2>Businesses</h2>
+        <p>This view shows how participating businesses could see performance, route visibility, and expected outcomes. Switch between stores to compare how the platform supports different business types.</p>
         <div class="store-filter">
           <button class="filter-btn active" data-store="shake">Harlem Shake</button>
           <button class="filter-btn" data-store="sylvia">Sylvia's Corner</button>
@@ -860,19 +940,19 @@
       </div>
 
       <div class="grid three">
-        <div class="business-card" id="businessCardA"></div>
-        <div class="business-card" id="businessCardB"></div>
-        <div class="business-card" id="businessCardC"></div>
+        <div class="dashboard-card" id="businessCardA"></div>
+        <div class="dashboard-card" id="businessCardB"></div>
+        <div class="dashboard-card" id="businessCardC"></div>
       </div>
 
       <div class="grid two" style="margin-top:16px;">
         <div class="card" id="businessInsight"></div>
         <div class="card">
-          <h3>Business value</h3>
-          <ul class="clean">
+          <h3>Business Value</h3>
+          <ul>
             <li>Track scans, visits, and time-of-day demand</li>
             <li>Choose reward tiers based on budget and goals</li>
-            <li>Appear more often on AI-recommended routes through premium placement</li>
+            <li>Appear more often on recommended routes through premium placement</li>
             <li>Use measurable ROI instead of guesswork marketing</li>
           </ul>
         </div>
@@ -882,17 +962,17 @@
     <section class="panel" id="app">
       <div class="card">
         <h2>App</h2>
-        <p>This tab simulates the user-facing mobile side of the system. Trigger a checkpoint alert, perform a scan, and watch the reward feed update the way a real user would see it.</p>
+        <p>This tab simulates the user-facing app layer with alerts, scans, and reward accumulation.</p>
       </div>
 
-      <div class="demo-grid">
+      <div class="grid two">
         <div class="phone-demo">
-          <div class="phone-demo-head">
+          <div class="phone-head">
             <h3 style="color:white; margin:0 0 6px;">Live User Screen</h3>
             <p style="margin:0; color:rgba(255,255,255,0.84);">Checkpoint alerts and reward unlocks</p>
           </div>
-          <div class="phone-demo-body">
-            <div class="notification blue show" id="appNotice">Session ready. Trigger a checkpoint to simulate an approaching landmark.</div>
+          <div class="phone-body">
+            <div class="status blue show" id="appNotice">Session ready. Trigger a checkpoint to simulate an approaching landmark.</div>
             <div class="button-row" style="margin-top:0;">
               <button class="button dark" id="triggerAlert"><i class="fa-solid fa-bell"></i> Trigger Alert</button>
               <button class="button green" id="simulateScan"><i class="fa-solid fa-qrcode"></i> Scan QR</button>
@@ -904,11 +984,11 @@
         </div>
 
         <div class="phone-demo">
-          <div class="phone-demo-head">
+          <div class="phone-head">
             <h3 style="color:white; margin:0 0 6px;">Gamification</h3>
             <p style="margin:0; color:rgba(255,255,255,0.84);">Why people keep coming back</p>
           </div>
-          <div class="phone-demo-body">
+          <div class="phone-body">
             <ul class="leaderboard">
               <li><span>3-day streak active</span><strong>+25 pts</strong></li>
               <li><span>Plaza Explorer badge</span><strong>7 / 10 stops</strong></li>
@@ -923,184 +1003,200 @@
 
   <div class="footer-note container">AI Walk-to-Earn Harlem platform demo.</div>
 
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+    crossorigin=""
+  ></script>
+
   <script>
-    const navButtons = document.querySelectorAll('[data-panel]');
-    const panels = document.querySelectorAll('.panel');
+    const tabButtons = document.querySelectorAll("[data-panel]");
+    const panels = document.querySelectorAll(".panel");
 
     function openPanel(id) {
-      panels.forEach(panel => panel.classList.toggle('active', panel.id === id));
-      navButtons.forEach(btn => btn.classList.toggle('active', btn.dataset.panel === id));
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      panels.forEach(panel => panel.classList.toggle("active", panel.id === id));
+      tabButtons.forEach(btn => btn.classList.toggle("active", btn.dataset.panel === id));
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
-    navButtons.forEach(btn => btn.addEventListener('click', () => openPanel(btn.dataset.panel)));
-    document.querySelectorAll('[data-open-panel]').forEach(btn => {
-      btn.addEventListener('click', () => openPanel(btn.dataset.openPanel));
+    tabButtons.forEach(btn => btn.addEventListener("click", () => openPanel(btn.dataset.panel)));
+    document.querySelectorAll("[data-open-panel]").forEach(btn => {
+      btn.addEventListener("click", () => openPanel(btn.dataset.openPanel));
     });
 
     const routeConfigurations = {
-      '10-standard-food': {
-        title: '10-Minute Quick Reward Route',
-        description: 'A short lunchtime preview centered around Montefiore Square with quick food-based checkpoints.',
-        summary: 'Fast route with food partners and one shorter completion loop.',
-        chips: ['Quick loop', 'Food rewards', '3 stops'],
-        hero: { time: '10 min', mode: 'Standard', reward: 'Food', stops: '3 stops' },
+      "10-standard-food": {
+        title: "10-Minute Quick Reward Route",
+        description: "A short lunchtime preview centered around Montefiore Square with quick food-based checkpoints.",
+        summary: "Fast route with food partners and one shorter completion loop.",
+        chips: ["Quick loop", "Food rewards", "3 stops"],
+        hero: { time: "10 min", mode: "Standard", reward: "Food", stops: "3 stops" },
         steps: [
-          'Begin at the Montefiore Square entry edge.',
-          'Stop at a quick-service coffee partner.',
-          'Finish at a convenience-style plaza edge stop.'
+          "Begin at the Montefiore Square entry edge.",
+          "Stop at a quick-service coffee partner.",
+          "Finish at a convenience-style plaza edge stop."
         ],
         checkpoints: [
-          { name: 'Montefiore Square Entry', type: 'Start', reward: 'Session started', points: 0, lat: 40.82094, lng: -73.94952 },
-          { name: 'Starbucks', type: 'Checkpoint 1', reward: '10% off coffee', points: 20, lat: 40.82130, lng: -73.94895 },
-          { name: 'Duane Reade', type: 'Final Stop', reward: 'Snack coupon', points: 30, lat: 40.82172, lng: -73.94832 }
+          { name: "Montefiore Square Entry", type: "Start", reward: "Session started", points: 0, lat: 40.82094, lng: -73.94952 },
+          { name: "Starbucks", type: "Checkpoint 1", reward: "10% off coffee", points: 20, lat: 40.82130, lng: -73.94895 },
+          { name: "Duane Reade", type: "Final Stop", reward: "Snack coupon", points: 30, lat: 40.82172, lng: -73.94832 }
         ]
       },
-      '20-standard-food': {
-        title: '20-Minute Discovery Route',
-        description: 'A balanced route focused in and around Montefiore Square with food-oriented checkpoints and comfortable walking flow.',
-        summary: 'Balanced route with shade, seating adjacency, and food rewards from real local destinations.',
-        chips: ['Shade prioritized', 'Food rewards', '4 stops'],
-        hero: { time: '20 min', mode: 'Standard', reward: 'Food', stops: '4 stops' },
+      "20-standard-food": {
+        title: "20-Minute Discovery Route",
+        description: "A balanced route focused in and around Montefiore Square with food-oriented checkpoints and comfortable walking flow.",
+        summary: "Balanced route with shade, seating adjacency, and food rewards from real destinations.",
+        chips: ["Shade prioritized", "Food rewards", "4 stops"],
+        hero: { time: "20 min", mode: "Standard", reward: "Food", stops: "4 stops" },
         steps: [
-          'Start at Montefiore Square and begin verified movement.',
-          'Reach Starbucks for a quick food reward checkpoint.',
-          'Continue to Harlem Shake as the primary destination stop.',
-          'Finish at Sylvia\'s Corner for a final bonus offer.'
+          "Start at Montefiore Square and begin verified movement.",
+          "Reach Starbucks for a quick food reward checkpoint.",
+          "Continue to Harlem Shake as the primary destination stop.",
+          "Finish at Sylvia's Corner for a final bonus offer."
         ],
         checkpoints: [
-          { name: 'Montefiore Square Entry', type: 'Start', reward: 'Session started', points: 0, lat: 40.82094, lng: -73.94952 },
-          { name: 'Starbucks', type: 'Checkpoint 1', reward: '10% off coffee', points: 25, lat: 40.82130, lng: -73.94895 },
-          { name: 'Harlem Shake', type: 'Checkpoint 2', reward: 'Free drink add-on', points: 35, lat: 40.82178, lng: -73.94818 },
-          { name: "Sylvia's Corner", type: 'Final Stop', reward: '15% off lunch combo', points: 55, lat: 40.82218, lng: -73.94752 }
+          { name: "Montefiore Square Entry", type: "Start", reward: "Session started", points: 0, lat: 40.82094, lng: -73.94952 },
+          { name: "Starbucks", type: "Checkpoint 1", reward: "10% off coffee", points: 25, lat: 40.82130, lng: -73.94895 },
+          { name: "Harlem Shake", type: "Checkpoint 2", reward: "Free drink add-on", points: 35, lat: 40.82178, lng: -73.94818 },
+          { name: "Sylvia's Corner", type: "Final Stop", reward: "15% off lunch combo", points: 55, lat: 40.82218, lng: -73.94752 }
         ]
       },
-      '40-standard-food': {
-        title: '40-Minute Full Plaza Route',
-        description: 'A longer exploration route around Montefiore Square and its surrounding edges, built for deeper engagement and multiple food stops.',
-        summary: 'Longer route with extended coverage, higher points, and more time for multiple destination visits.',
-        chips: ['Long loop', 'High points', 'Food rewards'],
-        hero: { time: '40 min', mode: 'Standard', reward: 'Food', stops: '4 stops' },
+      "40-standard-food": {
+        title: "40-Minute Full Plaza Route",
+        description: "A longer exploration route around Montefiore Square and its surrounding edges, built for deeper engagement and multiple food stops.",
+        summary: "Longer route with extended coverage, higher points, and more time for multiple destination visits.",
+        chips: ["Long loop", "High points", "Food rewards"],
+        hero: { time: "40 min", mode: "Standard", reward: "Food", stops: "4 stops" },
         steps: [
-          'Walk a larger loop around the plaza perimeter.',
-          'Complete all food-oriented checkpoints.',
-          'Unlock a stronger end-of-route bonus.'
+          "Walk a larger loop around the plaza perimeter.",
+          "Complete all food-oriented checkpoints.",
+          "Unlock a stronger end-of-route bonus."
         ],
         checkpoints: [
-          { name: 'Montefiore Square Entry', type: 'Start', reward: 'Session started', points: 0, lat: 40.82094, lng: -73.94952 },
-          { name: 'Starbucks', type: 'Checkpoint 1', reward: 'Coffee coupon', points: 25, lat: 40.82130, lng: -73.94895 },
-          { name: 'Harlem Shake', type: 'Checkpoint 2', reward: 'Free drink add-on', points: 40, lat: 40.82178, lng: -73.94818 },
-          { name: "Sylvia's Corner", type: 'Final Stop', reward: 'Meal discount bonus', points: 65, lat: 40.82218, lng: -73.94752 }
+          { name: "Montefiore Square Entry", type: "Start", reward: "Session started", points: 0, lat: 40.82094, lng: -73.94952 },
+          { name: "Starbucks", type: "Checkpoint 1", reward: "Coffee coupon", points: 25, lat: 40.82130, lng: -73.94895 },
+          { name: "Harlem Shake", type: "Checkpoint 2", reward: "Free drink add-on", points: 40, lat: 40.82178, lng: -73.94818 },
+          { name: "Sylvia's Corner", type: "Final Stop", reward: "Meal discount bonus", points: 65, lat: 40.82218, lng: -73.94752 }
         ]
       },
-      '20-slow-food': {
-        title: '20-Minute Slow Pace Route',
-        description: 'A lower-pressure route around Montefiore Square with easier pacing and food rewards placed at clearer, more comfortable stops.',
-        summary: 'Comfort-focused route with easier pacing and accessible stop timing.',
-        chips: ['Slow pace', 'Comfort stops', 'Food rewards'],
-        hero: { time: '20 min', mode: 'Slow pace', reward: 'Food', stops: '4 stops' },
+      "20-slow-food": {
+        title: "20-Minute Slow Pace Route",
+        description: "A lower-pressure route around Montefiore Square with easier pacing and food rewards placed at clearer, more comfortable stops.",
+        summary: "Comfort-focused route with easier pacing and accessible stop timing.",
+        chips: ["Slow pace", "Comfort stops", "Food rewards"],
+        hero: { time: "20 min", mode: "Slow pace", reward: "Food", stops: "4 stops" },
         steps: [
-          'Use the gentlest entry route into the square.',
-          'Pause between each stop at comfort zones.',
-          'Complete the sequence without strict timing pressure.'
+          "Use the gentlest entry route into the square.",
+          "Pause between each stop at comfort zones.",
+          "Complete the sequence without strict timing pressure."
         ],
         checkpoints: [
-          { name: 'Montefiore Square Entry', type: 'Start', reward: 'Session started', points: 0, lat: 40.82094, lng: -73.94952 },
-          { name: 'Starbucks', type: 'Checkpoint 1', reward: 'Coffee coupon', points: 20, lat: 40.82130, lng: -73.94895 },
-          { name: 'Harlem Shake', type: 'Checkpoint 2', reward: 'Free drink add-on', points: 30, lat: 40.82178, lng: -73.94818 },
-          { name: "Sylvia's Corner", type: 'Final Stop', reward: 'Comfort route meal offer', points: 45, lat: 40.82218, lng: -73.94752 }
+          { name: "Montefiore Square Entry", type: "Start", reward: "Session started", points: 0, lat: 40.82094, lng: -73.94952 },
+          { name: "Starbucks", type: "Checkpoint 1", reward: "Coffee coupon", points: 20, lat: 40.82130, lng: -73.94895 },
+          { name: "Harlem Shake", type: "Checkpoint 2", reward: "Free drink add-on", points: 30, lat: 40.82178, lng: -73.94818 },
+          { name: "Sylvia's Corner", type: "Final Stop", reward: "Comfort route meal offer", points: 45, lat: 40.82218, lng: -73.94752 }
         ]
       },
-      '20-wheelchair-food': {
-        title: '20-Minute Accessible Route',
-        description: 'A wheelchair-friendly route centered around Montefiore Square using the easiest circulation paths and accessible stops.',
-        summary: 'Step-free route with easy visibility, wider movement paths, and accessible food rewards.',
-        chips: ['Accessible', 'Wide circulation', 'Food rewards'],
-        hero: { time: '20 min', mode: 'Accessible', reward: 'Food', stops: '4 stops' },
+      "20-wheelchair-food": {
+        title: "20-Minute Accessible Route",
+        description: "A wheelchair-friendly route centered around Montefiore Square using the easiest circulation paths and accessible stops.",
+        summary: "Step-free route with easy visibility, wider movement paths, and accessible food rewards.",
+        chips: ["Accessible", "Wide circulation", "Food rewards"],
+        hero: { time: "20 min", mode: "Accessible", reward: "Food", stops: "4 stops" },
         steps: [
-          'Begin on the easiest accessible approach.',
-          'Use wide circulation and clearly visible stops.',
-          'Complete the sequence with accessible destinations.'
+          "Begin on the easiest accessible approach.",
+          "Use wide circulation and clearly visible stops.",
+          "Complete the sequence with accessible destinations."
         ],
         checkpoints: [
-          { name: 'Montefiore Square Entry', type: 'Start', reward: 'Session started', points: 0, lat: 40.82094, lng: -73.94952 },
-          { name: 'Starbucks', type: 'Checkpoint 1', reward: 'Coffee coupon', points: 20, lat: 40.82130, lng: -73.94895 },
-          { name: 'Harlem Shake', type: 'Checkpoint 2', reward: 'Accessible drink reward', points: 30, lat: 40.82178, lng: -73.94818 },
-          { name: "Sylvia's Corner", type: 'Final Stop', reward: 'Meal bonus', points: 45, lat: 40.82218, lng: -73.94752 }
+          { name: "Montefiore Square Entry", type: "Start", reward: "Session started", points: 0, lat: 40.82094, lng: -73.94952 },
+          { name: "Starbucks", type: "Checkpoint 1", reward: "Coffee coupon", points: 20, lat: 40.82130, lng: -73.94895 },
+          { name: "Harlem Shake", type: "Checkpoint 2", reward: "Accessible drink reward", points: 30, lat: 40.82178, lng: -73.94818 },
+          { name: "Sylvia's Corner", type: "Final Stop", reward: "Meal bonus", points: 45, lat: 40.82218, lng: -73.94752 }
         ]
       },
-      '20-standard-retail': {
-        title: '20-Minute Retail Route',
-        description: 'A route focused on store-based participation around Montefiore Square, using retail-oriented real destinations.',
-        summary: 'Retail-focused path with bookstore and pharmacy-style discounts instead of food-first rewards.',
-        chips: ['Retail offers', 'Shopping route', '4 stops'],
-        hero: { time: '20 min', mode: 'Standard', reward: 'Retail', stops: '4 stops' },
+      "20-standard-retail": {
+        title: "20-Minute Retail Route",
+        description: "A route focused on store-based participation around Montefiore Square using retail-oriented real destinations.",
+        summary: "Retail-focused path with bookstore and pharmacy-style discounts instead of food-first rewards.",
+        chips: ["Retail offers", "Shopping route", "4 stops"],
+        hero: { time: "20 min", mode: "Standard", reward: "Retail", stops: "4 stops" },
         steps: [
-          'Begin at the square entry point.',
-          'Use retail-facing checkpoints instead of food-first stops.',
-          'Complete the route with store discounts and shopping offers.'
+          "Begin at the square entry point.",
+          "Use retail-facing checkpoints instead of food-first stops.",
+          "Complete the route with store discounts and shopping offers."
         ],
         checkpoints: [
-          { name: 'Montefiore Square Entry', type: 'Start', reward: 'Session started', points: 0, lat: 40.82094, lng: -73.94952 },
-          { name: 'Duane Reade', type: 'Checkpoint 1', reward: '10% off essentials', points: 25, lat: 40.82112, lng: -73.94876 },
-          { name: 'Word Up Books', type: 'Checkpoint 2', reward: '15% off select books', points: 35, lat: 40.82164, lng: -73.94805 },
-          { name: 'T-Mobile', type: 'Final Stop', reward: 'Accessory discount', points: 50, lat: 40.82205, lng: -73.94740 }
+          { name: "Montefiore Square Entry", type: "Start", reward: "Session started", points: 0, lat: 40.82094, lng: -73.94952 },
+          { name: "Duane Reade", type: "Checkpoint 1", reward: "10% off essentials", points: 25, lat: 40.82112, lng: -73.94876 },
+          { name: "Word Up Books", type: "Checkpoint 2", reward: "15% off select books", points: 35, lat: 40.82164, lng: -73.94805 },
+          { name: "T-Mobile", type: "Final Stop", reward: "Accessory discount", points: 50, lat: 40.82205, lng: -73.94740 }
         ]
       },
-      '20-standard-mixed': {
-        title: '20-Minute Mixed Reward Route',
-        description: 'A mixed route around Montefiore Square that blends food and retail incentives for broader engagement.',
-        summary: 'Hybrid route combining food offers, retail discounts, and a balanced set of destination types.',
-        chips: ['Mixed rewards', 'Hybrid route', '4 stops'],
-        hero: { time: '20 min', mode: 'Standard', reward: 'Mixed', stops: '4 stops' },
+      "20-standard-mixed": {
+        title: "20-Minute Mixed Reward Route",
+        description: "A mixed route around Montefiore Square that blends food and retail incentives for broader engagement.",
+        summary: "Hybrid route combining food offers, retail discounts, and a balanced destination mix.",
+        chips: ["Mixed rewards", "Hybrid route", "4 stops"],
+        hero: { time: "20 min", mode: "Standard", reward: "Mixed", stops: "4 stops" },
         steps: [
-          'Start at the plaza entry and move through a mixed sequence.',
-          'Alternate between a food stop and a retail stop.',
-          'End with a combined reward bundle.'
+          "Start at the plaza entry and move through a mixed sequence.",
+          "Alternate between a food stop and a retail stop.",
+          "End with a combined reward bundle."
         ],
         checkpoints: [
-          { name: 'Montefiore Square Entry', type: 'Start', reward: 'Session started', points: 0, lat: 40.82094, lng: -73.94952 },
-          { name: 'Starbucks', type: 'Checkpoint 1', reward: 'Coffee coupon', points: 20, lat: 40.82130, lng: -73.94895 },
-          { name: 'Word Up Books', type: 'Checkpoint 2', reward: 'Book discount', points: 30, lat: 40.82164, lng: -73.94805 },
-          { name: 'Harlem Shake', type: 'Final Stop', reward: 'Mixed reward bonus', points: 55, lat: 40.82178, lng: -73.94818 }
+          { name: "Montefiore Square Entry", type: "Start", reward: "Session started", points: 0, lat: 40.82094, lng: -73.94952 },
+          { name: "Starbucks", type: "Checkpoint 1", reward: "Coffee coupon", points: 20, lat: 40.82130, lng: -73.94895 },
+          { name: "Word Up Books", type: "Checkpoint 2", reward: "Book discount", points: 30, lat: 40.82164, lng: -73.94805 },
+          { name: "Harlem Shake", type: "Final Stop", reward: "Mixed reward bonus", points: 55, lat: 40.82178, lng: -73.94818 }
         ]
       }
     };
 
-    const heroRoutePreview = document.getElementById('heroRoutePreview');
-    const heroDescription = document.getElementById('heroDescription');
-    const heroMetricTime = document.getElementById('heroMetricTime');
-    const heroMetricMode = document.getElementById('heroMetricMode');
-    const heroMetricReward = document.getElementById('heroMetricReward');
-    const heroMetricStops = document.getElementById('heroMetricStops');
-    const routeTitle = document.getElementById('routeTitle');
-    const routeSummary = document.getElementById('routeSummary');
-    const chipA = document.getElementById('chipA');
-    const chipB = document.getElementById('chipB');
-    const chipC = document.getElementById('chipC');
-    const routeSteps = document.getElementById('routeSteps');
-    const checkpointList = document.getElementById('checkpointList');
-    const mainNotice = document.getElementById('mainNotice');
-    const liveFeed = document.getElementById('liveFeed');
-    const metricDistance = document.getElementById('metricDistance');
-    const metricScans = document.getElementById('metricScans');
-    const metricPoints = document.getElementById('metricPoints');
-    const userLeaderboardPoints = document.getElementById('userLeaderboardPoints');
-    const impactBusiness = document.getElementById('impactBusiness');
-    const impactMessage = document.getElementById('impactMessage');
-    const impactVisits = document.getElementById('impactVisits');
-    const impactRewards = document.getElementById('impactRewards');
-    const walkerBadge = document.getElementById('walkerBadge');
+    const heroRoutePreview = document.getElementById("heroRoutePreview");
+    const heroDescription = document.getElementById("heroDescription");
+    const heroMetricTime = document.getElementById("heroMetricTime");
+    const heroMetricMode = document.getElementById("heroMetricMode");
+    const heroMetricReward = document.getElementById("heroMetricReward");
+    const heroMetricStops = document.getElementById("heroMetricStops");
 
-    const map = L.map('leafletMap', { zoomControl: true, scrollWheelZoom: true }).setView([40.82155, -73.9487], 19);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    const routeTitle = document.getElementById("routeTitle");
+    const routeSummary = document.getElementById("routeSummary");
+    const chipA = document.getElementById("chipA");
+    const chipB = document.getElementById("chipB");
+    const chipC = document.getElementById("chipC");
+    const routeSteps = document.getElementById("routeSteps");
+    const checkpointList = document.getElementById("checkpointList");
+
+    const mainNotice = document.getElementById("mainNotice");
+    const liveFeed = document.getElementById("liveFeed");
+
+    const metricDistance = document.getElementById("metricDistance");
+    const metricScans = document.getElementById("metricScans");
+    const metricPoints = document.getElementById("metricPoints");
+    const userLeaderboardPoints = document.getElementById("userLeaderboardPoints");
+
+    const impactBusiness = document.getElementById("impactBusiness");
+    const impactMessage = document.getElementById("impactMessage");
+    const impactVisits = document.getElementById("impactVisits");
+    const impactRewards = document.getElementById("impactRewards");
+
+    const walkerBadge = document.getElementById("walkerBadge");
+
+    const map = L.map("leafletMap", {
+      zoomControl: true,
+      scrollWheelZoom: true
+    }).setView([40.82155, -73.9487], 19);
+
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
       maxZoom: 20,
-      attribution: '&copy; OpenStreetMap contributors'
+      attribution: "&copy; OpenStreetMap contributors"
     }).addTo(map);
 
-    let currentConfigKey = '20-standard-food';
+    let currentConfigKey = "20-standard-food";
     let currentConfig = routeConfigurations[currentConfigKey];
+    let currentStops = [];
+
     let sessionStarted = false;
     let currentStep = 0;
     let totalPoints = 0;
@@ -1108,14 +1204,14 @@
     let totalDistance = 0;
     let businessVisits = 0;
     let businessRewards = 0;
+
     let routeLine = null;
     let pointMarkers = [];
     let walkerMarker = null;
-    let currentStops = [];
 
     function pushFeed(title, text) {
-      const item = document.createElement('div');
-      item.className = 'feed-item';
+      const item = document.createElement("div");
+      item.className = "feed-item";
       item.innerHTML = `<strong>${title}</strong><br />${text}`;
       liveFeed.prepend(item);
     }
@@ -1139,20 +1235,20 @@
 
     function renderStopCards() {
       checkpointList.innerHTML = currentConfig.checkpoints.map((stop, index) => `
-        <button class="stop-card ${index === 0 ? '' : 'locked'}" data-stop-index="${index}">
+        <button class="stop-card ${index === 0 ? "" : "locked"}" data-stop-index="${index}">
           <div class="stop-left">
-            <div class="stop-number">${index + 1}</div>
+            <div class="stop-badge">${index + 1}</div>
             <div>
               <div class="stop-name">${stop.name}</div>
-              <div class="stop-meta">${stop.type} · ${stop.reward}</div>
+              <div class="stop-meta-text">${stop.type} · ${stop.reward}</div>
             </div>
           </div>
-          <span class="stop-tag"><i class="fa-solid fa-location-dot"></i>${index === 0 ? 'Start' : 'QR stop'}</span>
+          <span class="tag"><i class="fa-solid fa-location-dot"></i>${index === 0 ? "Start" : "QR stop"}</span>
         </button>
-      `).join('');
+      `).join("");
 
-      document.querySelectorAll('.stop-card').forEach(card => {
-        card.addEventListener('click', () => handleStopClick(Number(card.dataset.stopIndex)));
+      document.querySelectorAll(".stop-card").forEach(card => {
+        card.addEventListener("click", () => handleStopClick(Number(card.dataset.stopIndex)));
       });
     }
 
@@ -1161,44 +1257,49 @@
       const coords = currentConfig.checkpoints.map(stop => [stop.lat, stop.lng]);
 
       routeLine = L.polyline(coords, {
-        color: '#4b98ea',
+        color: "#4b98ea",
         weight: 6,
-        opacity: 0.9,
-        dashArray: '12 10',
-        lineCap: 'round',
-        lineJoin: 'round'
+        opacity: 0.92,
+        dashArray: "12 10",
+        lineCap: "round",
+        lineJoin: "round"
       }).addTo(map);
 
       pointMarkers = currentConfig.checkpoints.map((stop, index) => {
         const marker = L.circleMarker([stop.lat, stop.lng], {
           radius: index === 0 ? 7 : 8,
-          color: index === 0 ? '#17324f' : '#4b98ea',
+          color: index === 0 ? "#17324f" : "#4b98ea",
           weight: 3,
-          fillColor: '#ffffff',
+          fillColor: "#ffffff",
           fillOpacity: 1
         }).addTo(map);
-        marker.bindTooltip(stop.name, { direction: 'top', offset: [0, -10] });
-        marker.on('click', () => handleStopClick(index));
+
+        marker.bindTooltip(stop.name, {
+          direction: "top",
+          offset: [0, -10]
+        });
+
+        marker.on("click", () => handleStopClick(index));
         return marker;
       });
 
       walkerMarker = L.circleMarker(coords[0], {
         radius: 8,
-        color: '#17324f',
+        color: "#17324f",
         weight: 3,
-        fillColor: '#17324f',
+        fillColor: "#17324f",
         fillOpacity: 1,
         opacity: 0,
         fillOpacity: 0
       }).addTo(map);
 
-      map.fitBounds(routeLine.getBounds(), { padding: [60, 60] });
+      map.fitBounds(routeLine.getBounds(), { padding: [70, 70] });
       map.setZoom(Math.max(map.getZoom(), 18));
     }
 
     function renderRouteConfig(key) {
       currentConfigKey = key;
-      currentConfig = routeConfigurations[key] || routeConfigurations['20-standard-food'];
+      currentConfig = routeConfigurations[key] || routeConfigurations["20-standard-food"];
 
       heroRoutePreview.textContent = `Current preview: ${currentConfig.title}`;
       heroDescription.textContent = currentConfig.description;
@@ -1215,14 +1316,18 @@
 
       routeSteps.innerHTML = currentConfig.steps.map((step, index) => `
         <div class="route-step">
-          <div class="route-step-left">
-            <div class="route-step-number">${index + 1}</div>
+          <div class="route-left">
+            <div class="step-badge">${index + 1}</div>
             <div>${step}</div>
           </div>
         </div>
-      `).join('');
+      `).join("");
 
-      currentStops = currentConfig.checkpoints.map(stop => ({ ...stop, done: false, locked: true }));
+      currentStops = currentConfig.checkpoints.map(stop => ({
+        ...stop,
+        done: false,
+        locked: true
+      }));
       currentStops[0].locked = false;
 
       renderStopCards();
@@ -1230,11 +1335,11 @@
     }
 
     function updateStopCardStates() {
-      document.querySelectorAll('.stop-card').forEach((card, index) => {
+      document.querySelectorAll(".stop-card").forEach((card, index) => {
         const stop = currentStops[index];
-        card.classList.toggle('locked', stop.locked);
-        card.classList.toggle('done', stop.done);
-        card.classList.toggle('active', index === currentStep && sessionStarted);
+        card.classList.toggle("locked", stop.locked);
+        card.classList.toggle("done", stop.done);
+        card.classList.toggle("active", sessionStarted && index === currentStep);
       });
     }
 
@@ -1247,32 +1352,36 @@
       businessVisits = 0;
       businessRewards = 0;
 
-      currentStops = currentConfig.checkpoints.map(stop => ({ ...stop, done: false, locked: true }));
+      currentStops = currentConfig.checkpoints.map(stop => ({
+        ...stop,
+        done: false,
+        locked: true
+      }));
       currentStops[0].locked = false;
 
       updateStopCardStates();
       updateMetrics();
 
-      mainNotice.className = 'notification blue show';
-      mainNotice.textContent = 'Build a route first. Then start the walk to activate the stops and map tracking.';
+      mainNotice.className = "status blue show";
+      mainNotice.textContent = "Build a route first. Then start the session to activate the stops and tracking.";
 
-      liveFeed.innerHTML = '<div class="feed-item"><strong>How this works</strong><br />Start the session, then click the start stop and continue through the listed checkpoints in order. The map follows your movement and the businesses change based on your selected reward interest.</div>';
+      liveFeed.innerHTML = '<div class="feed-item"><strong>How it works</strong><br />The route settings change the preview, map, and stop list together. Start the session, then complete the stops in order.</div>';
 
-      impactBusiness.textContent = 'No active business yet';
-      impactMessage.textContent = 'No verified stops yet. Start the route to generate business activity.';
+      impactBusiness.textContent = "No active business yet";
+      impactMessage.textContent = "Start the route and complete a verified stop to generate live impact.";
 
       if (walkerMarker) {
         walkerMarker.setLatLng([currentConfig.checkpoints[0].lat, currentConfig.checkpoints[0].lng]);
         walkerMarker.setStyle({ opacity: 0, fillOpacity: 0 });
       }
 
-      walkerBadge.style.display = 'none';
+      walkerBadge.style.display = "none";
     }
 
     function getSelectedConfigKey() {
-      const minutes = document.getElementById('minutes').value;
-      const pace = document.getElementById('pace').value;
-      const rewardType = document.getElementById('rewardType').value;
+      const minutes = document.getElementById("minutes").value;
+      const pace = document.getElementById("pace").value;
+      const rewardType = document.getElementById("rewardType").value;
       return `${minutes}-${pace}-${rewardType}`;
     }
 
@@ -1285,13 +1394,13 @@
       map.flyTo([stop.lat, stop.lng], 19, { duration: 0.8 });
 
       const positions = [
-        { left: '22%', top: '76%' },
-        { left: '38%', top: '58%' },
-        { left: '57%', top: '45%' },
-        { left: '74%', top: '28%' }
+        { left: "24%", top: "76%" },
+        { left: "40%", top: "58%" },
+        { left: "57%", top: "46%" },
+        { left: "74%", top: "30%" }
       ];
       const pos = positions[index] || positions[positions.length - 1];
-      walkerBadge.style.display = 'block';
+      walkerBadge.style.display = "block";
       walkerBadge.style.left = pos.left;
       walkerBadge.style.top = pos.top;
     }
@@ -1300,13 +1409,13 @@
       const stop = currentStops[index];
 
       if (!sessionStarted) {
-        mainNotice.className = 'notification red show';
-        mainNotice.textContent = 'Start the session first so the route becomes active.';
+        mainNotice.className = "status red show";
+        mainNotice.textContent = "Start the session first so the route becomes active.";
         return;
       }
 
       if (index !== currentStep) {
-        mainNotice.className = 'notification red show';
+        mainNotice.className = "status red show";
         mainNotice.textContent = `This stop is not active yet. Complete stop ${currentStep + 1} first.`;
         return;
       }
@@ -1317,9 +1426,9 @@
 
       if (index === 0) {
         totalDistance += 0.1;
-        mainNotice.className = 'notification blue show';
-        mainNotice.textContent = 'Route verified. Move to the next destination for your first confirmed checkpoint.';
-        pushFeed('Route verified', 'Movement tracking has started successfully from the Montefiore Square entry point.');
+        mainNotice.className = "status blue show";
+        mainNotice.textContent = "Route verified. Move to the next destination for your first confirmed checkpoint.";
+        pushFeed("Route verified", "Movement tracking has started successfully from the Montefiore Square entry point.");
       } else {
         totalScans += 1;
         totalPoints += stop.points;
@@ -1330,7 +1439,7 @@
         impactBusiness.textContent = stop.name;
         impactMessage.textContent = `Verified stop completed. Reward unlocked: ${stop.reward}. This visit contributes to business participation analytics.`;
 
-        mainNotice.className = 'notification green show';
+        mainNotice.className = "status green show";
         mainNotice.textContent = `${stop.name} confirmed. Reward unlocked: ${stop.reward}.`;
 
         pushFeed(stop.name, `Checkpoint confirmed. +${stop.points} points. Reward: ${stop.reward}.`);
@@ -1343,37 +1452,37 @@
       updateStopCardStates();
 
       if (currentStep >= currentStops.length) {
-        mainNotice.className = 'notification green show';
-        mainNotice.textContent = 'Route complete. Final reward bundle unlocked and leaderboard score updated.';
-        pushFeed('Route complete', 'You completed the full route and finished all active checkpoints.');
+        mainNotice.className = "status green show";
+        mainNotice.textContent = "Route complete. Final reward bundle unlocked and leaderboard score updated.";
+        pushFeed("Route complete", "You completed the full route and finished all active checkpoints.");
       }
     }
 
-    document.getElementById('buildRoute').addEventListener('click', () => {
+    document.getElementById("buildRoute").addEventListener("click", () => {
       renderRouteConfig(getSelectedConfigKey());
       resetSession();
-      mainNotice.className = 'notification blue show';
+      mainNotice.className = "status blue show";
       mainNotice.textContent = `Route built: ${currentConfig.title}. Start the session to activate the stops.`;
     });
 
-    ['minutes', 'pace', 'rewardType'].forEach(id => {
-      document.getElementById(id).addEventListener('change', () => {
+    ["minutes", "pace", "rewardType"].forEach(id => {
+      document.getElementById(id).addEventListener("change", () => {
         renderRouteConfig(getSelectedConfigKey());
         resetSession();
-        mainNotice.className = 'notification blue show';
+        mainNotice.className = "status blue show";
         mainNotice.textContent = `Preview updated: ${currentConfig.title}.`;
       });
     });
 
-    document.getElementById('startWalk').addEventListener('click', () => {
+    document.getElementById("startWalk").addEventListener("click", () => {
       sessionStarted = true;
       updateStopCardStates();
-      mainNotice.className = 'notification green show';
-      mainNotice.textContent = 'Session started. Click the first stop to begin, then continue in order. You can pan and zoom around Montefiore Square while walking.';
-      pushFeed('Session started', 'Your route is live. The map is centered around Montefiore Square and will follow each destination as you progress.');
+      mainNotice.className = "status green show";
+      mainNotice.textContent = "Session started. Click the first stop to begin, then continue in order. The map, feed, and impact panel update together.";
+      pushFeed("Session started", "The route is live. Pan and zoom around Montefiore Square while the system follows each stop.");
     });
 
-    document.getElementById('resetWalk').addEventListener('click', () => {
+    document.getElementById("resetWalk").addEventListener("click", () => {
       renderRouteConfig(currentConfigKey);
       resetSession();
     });
@@ -1381,33 +1490,121 @@
     const businessData = {
       shake: {
         cards: [
-          { title: 'Harlem Shake', badge: 'Tier 3 Premium', badgeClass: 'green', lines: ['QR scans this week: 214', 'Estimated store visits: 89', 'Top reward: Free drink with purchase', 'Best time: 11am–2pm'] },
-          { title: 'Route Priority', badge: 'AI surfaced often', badgeClass: 'blue', lines: ['Food-focused users see this stop more often', 'High lunchtime conversion rate', 'Premium placement increases discovery'] },
-          { title: 'ROI Snapshot', badge: 'Strong return', badgeClass: 'gold', lines: ['Projected incremental revenue: $1,340', 'Average basket lift: +18%', 'High repeat use from streak walkers'] }
+          {
+            title: "Harlem Shake",
+            badge: "Tier 3 Premium",
+            badgeClass: "green",
+            lines: [
+              "QR scans this week: 214",
+              "Estimated store visits: 89",
+              "Top reward: Free drink with purchase",
+              "Best time: 11am–2pm"
+            ]
+          },
+          {
+            title: "Route Priority",
+            badge: "AI surfaced often",
+            badgeClass: "blue",
+            lines: [
+              "Food-focused users see this stop more often",
+              "High lunchtime conversion rate",
+              "Premium placement increases discovery"
+            ]
+          },
+          {
+            title: "ROI Snapshot",
+            badge: "Strong return",
+            badgeClass: "gold",
+            lines: [
+              "Projected incremental revenue: $1,340",
+              "Average basket lift: +18%",
+              "High repeat use from streak walkers"
+            ]
+          }
         ],
-        insight: '<h3>Selected business insight</h3><p><strong>Harlem Shake</strong> performs best when the platform emphasizes quick lunchtime loops and food rewards. Premium placement makes it a natural destination stop, which helps convert movement into measurable spending.</p>'
+        insight: "<h3>Selected business insight</h3><p><strong>Harlem Shake</strong> performs best when the platform emphasizes quick lunchtime loops and food rewards. Premium placement makes it a natural destination stop, which helps convert movement into measurable spending.</p>"
       },
       sylvia: {
         cards: [
-          { title: "Sylvia's Corner", badge: 'Tier 2 Standard', badgeClass: 'gold', lines: ['QR scans this week: 176', 'Estimated store visits: 72', 'Top reward: 15% off lunch combo', 'Best time: 12pm–3pm'] },
-          { title: 'Route Priority', badge: 'Midday focus', badgeClass: 'blue', lines: ['Best on family and lunch routes', 'Works well for mixed reward users', 'Useful as a final stop'] },
-          { title: 'ROI Snapshot', badge: 'Steady return', badgeClass: 'green', lines: ['Projected incremental revenue: $980', 'Average basket lift: +12%', 'Strong conversion on event days'] }
+          {
+            title: "Sylvia's Corner",
+            badge: "Tier 2 Standard",
+            badgeClass: "gold",
+            lines: [
+              "QR scans this week: 176",
+              "Estimated store visits: 72",
+              "Top reward: 15% off lunch combo",
+              "Best time: 12pm–3pm"
+            ]
+          },
+          {
+            title: "Route Priority",
+            badge: "Midday focus",
+            badgeClass: "blue",
+            lines: [
+              "Best on family and lunch routes",
+              "Works well for mixed reward users",
+              "Useful as a final stop"
+            ]
+          },
+          {
+            title: "ROI Snapshot",
+            badge: "Steady return",
+            badgeClass: "green",
+            lines: [
+              "Projected incremental revenue: $980",
+              "Average basket lift: +12%",
+              "Strong conversion on event days"
+            ]
+          }
         ],
-        insight: '<h3>Selected business insight</h3><p><strong>Sylvia\'s Corner</strong> works best when the app pushes midday promotions, family-friendly walking loops, and mixed reward routes. This business benefits from slightly longer dwell-time patterns rather than ultra-fast sessions.</p>'
+        insight: "<h3>Selected business insight</h3><p><strong>Sylvia's Corner</strong> works best when the app pushes midday promotions, family-friendly walking loops, and mixed reward routes. This business benefits from slightly longer dwell-time patterns rather than ultra-fast sessions.</p>"
       },
       books: {
         cards: [
-          { title: 'Word Up Books', badge: 'Tier 1 Basic', badgeClass: 'blue', lines: ['QR scans this week: 121', 'Estimated store visits: 48', 'Top reward: 15% off select books', 'Best time: 4pm–6pm'] },
-          { title: 'Route Priority', badge: 'Retail aligned', badgeClass: 'gold', lines: ['Best for retail-focused routes', 'Works well for after-school sessions', 'Improves low-traffic periods'] },
-          { title: 'ROI Snapshot', badge: 'Growing return', badgeClass: 'green', lines: ['Projected incremental revenue: $640', 'Average basket lift: +9%', 'Best on browsing-oriented loops'] }
+          {
+            title: "Word Up Books",
+            badge: "Tier 1 Basic",
+            badgeClass: "blue",
+            lines: [
+              "QR scans this week: 121",
+              "Estimated store visits: 48",
+              "Top reward: 15% off select books",
+              "Best time: 4pm–6pm"
+            ]
+          },
+          {
+            title: "Route Priority",
+            badge: "Retail aligned",
+            badgeClass: "gold",
+            lines: [
+              "Best for retail-focused routes",
+              "Works well for after-school sessions",
+              "Improves low-traffic periods"
+            ]
+          },
+          {
+            title: "ROI Snapshot",
+            badge: "Growing return",
+            badgeClass: "green",
+            lines: [
+              "Projected incremental revenue: $640",
+              "Average basket lift: +9%",
+              "Best on browsing-oriented loops"
+            ]
+          }
         ],
-        insight: '<h3>Selected business insight</h3><p><strong>Word Up Books</strong> benefits most when the platform promotes slower, retail-oriented routes. For this type of business, the value is not just volume but turning nearby presence into intentional store visits.</p>'
+        insight: "<h3>Selected business insight</h3><p><strong>Word Up Books</strong> benefits most when the platform promotes slower, retail-oriented routes. For this type of business, the value is not just volume but turning nearby presence into intentional store visits.</p>"
       }
     };
 
     function renderBusiness(storeKey) {
       const data = businessData[storeKey];
-      const targets = [document.getElementById('businessCardA'), document.getElementById('businessCardB'), document.getElementById('businessCardC')];
+      const targets = [
+        document.getElementById("businessCardA"),
+        document.getElementById("businessCardB"),
+        document.getElementById("businessCardC")
+      ];
 
       data.cards.forEach((card, index) => {
         targets[index].innerHTML = `
@@ -1415,42 +1612,42 @@
             <h3>${card.title}</h3>
             <span class="badge ${card.badgeClass}">${card.badge}</span>
           </div>
-          ${card.lines.map(line => `<p>${line}</p>`).join('')}
+          ${card.lines.map(line => `<p>${line}</p>`).join("")}
         `;
       });
 
-      document.getElementById('businessInsight').innerHTML = data.insight;
+      document.getElementById("businessInsight").innerHTML = data.insight;
     }
 
-    document.querySelectorAll('.filter-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
+    document.querySelectorAll(".filter-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
         renderBusiness(btn.dataset.store);
       });
     });
 
-    const appNotice = document.getElementById('appNotice');
-    const rewardList = document.getElementById('rewardList');
+    const appNotice = document.getElementById("appNotice");
+    const rewardList = document.getElementById("rewardList");
     let appRewardCount = 0;
 
-    document.getElementById('triggerAlert').addEventListener('click', () => {
-      appNotice.className = 'notification blue show';
-      appNotice.textContent = 'Checkpoint nearby: You are approaching the next Montefiore Square destination. Scan the storefront code to unlock your reward.';
+    document.getElementById("triggerAlert").addEventListener("click", () => {
+      appNotice.className = "status blue show";
+      appNotice.textContent = "Checkpoint nearby: You are approaching the next Montefiore Square destination. Scan the storefront code to unlock your reward.";
     });
 
-    document.getElementById('simulateScan').addEventListener('click', () => {
+    document.getElementById("simulateScan").addEventListener("click", () => {
       appRewardCount += 1;
-      appNotice.className = 'notification green show';
-      appNotice.textContent = 'Checkpoint unlocked! A new reward has been added to your wallet.';
-      const reward = document.createElement('div');
-      reward.className = 'reward-item';
+      appNotice.className = "status green show";
+      appNotice.textContent = "Checkpoint unlocked. A new reward has been added to your wallet.";
+      const reward = document.createElement("div");
+      reward.className = "reward-item";
       reward.innerHTML = `<span>Reward unlock #${appRewardCount}</span><strong>+15 pts</strong>`;
       rewardList.prepend(reward);
     });
 
     renderRouteConfig(currentConfigKey);
-    renderBusiness('shake');
+    renderBusiness("shake");
     resetSession();
   </script>
 </body>
