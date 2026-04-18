@@ -555,19 +555,6 @@
       z-index: 200;
     }
 
-    .walker-badge {
-      position: absolute;
-      z-index: 650;
-      width: 16px;
-      height: 16px;
-      border-radius: 50%;
-      background: var(--navy);
-      box-shadow: 0 0 0 5px rgba(19,38,63,0.14);
-      transform: translate(-50%, -50%);
-      pointer-events: none;
-      display: none;
-    }
-
     .topline {
       display: flex;
       align-items: center;
@@ -727,9 +714,8 @@
         </div>
       </div>
       <div class="tabs">
-        <button class="tab-btn active" data-panel="platform" id="platformTab">
+        <button class="tab-btn active" data-panel="platform">
           Platform
-          <span class="tab-notif" id="platformNotif"></span>
         </button>
         <button class="tab-btn" data-panel="proposal">Proposal</button>
         <button class="tab-btn" data-panel="images">Images</button>
@@ -737,7 +723,10 @@
           Businesses
           <span class="tab-notif" id="businessNotif"></span>
         </button>
-        <button class="tab-btn" data-panel="app">App</button>
+        <button class="tab-btn" data-panel="app" id="appTab">
+          App
+          <span class="tab-notif" id="appNotif"></span>
+        </button>
       </div>
     </div>
   </nav>
@@ -850,7 +839,6 @@
 
             <div class="live-map">
               <div id="leafletMap"></div>
-              <div class="walker-badge" id="walkerBadge"></div>
             </div>
           </div>
 
@@ -958,6 +946,7 @@
       <div class="card">
         <h2>Businesses</h2>
         <p>This view shows how participating businesses could see performance, route visibility, and expected outcomes. Switch between stores to compare how the platform supports different business types.</p>
+        <div class="status blue" id="businessGuide"></div>
         <div class="store-filter">
           <button class="filter-btn active" data-store="shake">Harlem Shake</button>
           <button class="filter-btn" data-store="sylvia">Sylvia's Corner</button>
@@ -989,6 +978,7 @@
       <div class="card">
         <h2>App</h2>
         <p>This tab simulates the user-facing app layer with alerts, scans, and reward accumulation.</p>
+        <div class="status blue" id="appGuide"></div>
       </div>
 
       <div class="grid two">
@@ -1039,17 +1029,30 @@
     const tabButtons = document.querySelectorAll("[data-panel]");
     const panels = document.querySelectorAll(".panel");
 
-    const platformNotif = document.getElementById("platformNotif");
     const businessNotif = document.getElementById("businessNotif");
+    const appNotif = document.getElementById("appNotif");
+    const businessGuide = document.getElementById("businessGuide");
+    const appGuide = document.getElementById("appGuide");
 
     function showTabNotification(type) {
-      if (type === "platform") platformNotif.classList.add("show");
       if (type === "businesses") businessNotif.classList.add("show");
+      if (type === "app") appNotif.classList.add("show");
     }
 
     function clearTabNotification(type) {
-      if (type === "platform") platformNotif.classList.remove("show");
       if (type === "businesses") businessNotif.classList.remove("show");
+      if (type === "app") appNotif.classList.remove("show");
+    }
+
+    function showGuide(type, message) {
+      if (type === "businesses") {
+        businessGuide.textContent = message;
+        businessGuide.className = "status blue show";
+      }
+      if (type === "app") {
+        appGuide.textContent = message;
+        appGuide.className = "status blue show";
+      }
     }
 
     function openPanel(id) {
@@ -1057,8 +1060,15 @@
       tabButtons.forEach(btn => btn.classList.toggle("active", btn.dataset.panel === id));
       window.scrollTo({ top: 0, behavior: "smooth" });
 
-      if (id === "platform") clearTabNotification("platform");
-      if (id === "businesses") clearTabNotification("businesses");
+      if (id === "businesses") {
+        clearTabNotification("businesses");
+        showGuide("businesses", "New checkpoint data is available here. Review updated store impact, route visibility, and reward performance below.");
+      }
+
+      if (id === "app") {
+        clearTabNotification("app");
+        showGuide("app", "New checkpoint activity is available here. Trigger the alert or scan interaction below to preview what the user would now see.");
+      }
     }
 
     tabButtons.forEach(btn => btn.addEventListener("click", () => openPanel(btn.dataset.panel)));
@@ -1224,8 +1234,6 @@
     const impactMessage = document.getElementById("impactMessage");
     const impactVisits = document.getElementById("impactVisits");
     const impactRewards = document.getElementById("impactRewards");
-
-    const walkerBadge = document.getElementById("walkerBadge");
 
     const map = L.map("leafletMap", {
       zoomControl: true,
@@ -1419,9 +1427,10 @@
         walkerMarker.setStyle({ opacity: 0, fillOpacity: 0 });
       }
 
-      walkerBadge.style.display = "none";
-      clearTabNotification("platform");
       clearTabNotification("businesses");
+      clearTabNotification("app");
+      businessGuide.className = "status blue";
+      appGuide.className = "status blue";
     }
 
     function getSelectedConfigKey() {
@@ -1431,20 +1440,13 @@
       return `${minutes}-${pace}-${rewardType}`;
     }
 
-    function positionWalkerBadge(lat, lng) {
-      const point = map.latLngToContainerPoint([lat, lng]);
-      walkerBadge.style.display = "block";
-      walkerBadge.style.left = `${point.x}px`;
-      walkerBadge.style.top = `${point.y}px`;
-    }
-
     function moveWalkerTo(index) {
       const stop = currentConfig.checkpoints[index];
       if (!walkerMarker) return;
-      walkerMarker.setStyle({ opacity: 1, fillOpacity: 1 });
+
       walkerMarker.setLatLng([stop.lat, stop.lng]);
+      walkerMarker.setStyle({ opacity: 1, fillOpacity: 1 });
       map.flyTo([stop.lat, stop.lng], 19, { duration: 0.8 });
-      positionWalkerBadge(stop.lat, stop.lng);
     }
 
     function handleStopClick(index) {
@@ -1492,8 +1494,8 @@
 
         pushFeed(stop.name, `Checkpoint confirmed. +${stop.points} points. Reward: ${stop.reward}.`);
 
-        showTabNotification("platform");
         showTabNotification("businesses");
+        showTabNotification("app");
 
         const marker = pointMarkers[index];
         if (marker) {
@@ -1501,7 +1503,7 @@
           L.popup()
             .setLatLng([stop.lat, stop.lng])
             .setContent(
-              `<strong>${stop.name}</strong><br/>Checkpoint reached.<br/><span style="color:#2d7fce;font-weight:700;">Check Platform and Businesses for updates.</span>`
+              `<strong>${stop.name}</strong><br/>Checkpoint reached.<br/><span style="color:#2d7fce;font-weight:700;">See the Businesses and App tabs for new updates.</span>`
             )
             .openOn(map);
 
@@ -1713,15 +1715,6 @@
       reward.className = "reward-item";
       reward.innerHTML = `<span>Reward unlock #${appRewardCount}</span><strong>+15 pts</strong>`;
       rewardList.prepend(reward);
-    });
-
-    map.on("zoomend moveend", () => {
-      if (!walkerMarker) return;
-      const style = walkerMarker.options || {};
-      if ((style.opacity || 0) > 0) {
-        const latlng = walkerMarker.getLatLng();
-        positionWalkerBadge(latlng.lat, latlng.lng);
-      }
     });
 
     renderRouteConfig(currentConfigKey);
