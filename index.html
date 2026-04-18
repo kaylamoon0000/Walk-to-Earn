@@ -1717,24 +1717,29 @@
 
     sendVerificationCode.addEventListener("click", async () => {
       const email = authEmail.value.trim().toLowerCase();
+      const password = authPassword.value.trim();
 
-      if (!isValidComEmail(email)) {
+      if (!email || !password) {
         authStatus.className = "status red show";
-        authStatus.textContent = "Please enter a valid .com email.";
-        return;
-      }
-
-      if (!auth.currentUser) {
-        authStatus.className = "status red show";
-        authStatus.textContent = "Create your account first, then verify.";
+        authStatus.textContent = "Enter email AND password first.";
         return;
       }
 
       try {
-        await sendEmailVerification(auth.currentUser);
+        let userCred;
+
+        if (!auth.currentUser) {
+          userCred = await createUserWithEmailAndPassword(auth, email, password);
+        } else {
+          userCred = { user: auth.currentUser };
+        }
+
+        await sendEmailVerification(userCred.user);
+
         authStatus.className = "status blue show";
-        authStatus.textContent = `Verification email sent to ${email}. Check inbox/spam.`;
+        authStatus.textContent = "Verification email sent. Check inbox/spam.";
       } catch (error) {
+        console.error(error);
         authStatus.className = "status red show";
         authStatus.textContent = error.message;
       }
