@@ -8,9 +8,13 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 
 <style>
-body{margin:0;font-family:Inter;background:#eef3fb}
+body{
+margin:0;
+font-family:Inter, system-ui;
+background:#f4f7fb;
+}
 
-/* AUTH */
+/* LOGIN */
 #authScreen{
 height:100vh;
 display:flex;
@@ -22,23 +26,29 @@ background:linear-gradient(135deg,#4f8cff,#1e40af);
 .card{
 background:white;
 padding:30px;
-border-radius:18px;
-width:400px;
-box-shadow:0 20px 50px rgba(0,0,0,0.25);
+border-radius:20px;
+width:420px;
+box-shadow:0 20px 60px rgba(0,0,0,0.2);
 }
 
-h2{margin-bottom:10px}
+h2{margin-bottom:10px;}
 
-.tabs{display:flex;gap:10px;margin-bottom:10px}
+.tabs{display:flex;gap:10px;margin-bottom:12px;}
+
 .tabs button{
 flex:1;
-padding:10px;
+padding:12px;
 border:none;
 border-radius:10px;
 background:#e5e7eb;
 cursor:pointer;
+font-weight:500;
 }
-.tabs .active{background:#2563eb;color:white}
+
+.tabs .active{
+background:#2563eb;
+color:white;
+}
 
 input{
 width:100%;
@@ -46,6 +56,7 @@ padding:12px;
 margin:6px 0;
 border-radius:10px;
 border:1px solid #ddd;
+font-size:14px;
 }
 
 .mainBtn{
@@ -56,13 +67,18 @@ border:none;
 border-radius:10px;
 background:#2563eb;
 color:white;
+font-weight:600;
 cursor:pointer;
 }
 
-#msg{margin-top:10px;color:red}
+#msg{
+margin-top:10px;
+color:#dc2626;
+font-size:14px;
+}
 
 /* APP */
-#app{display:none}
+#app{display:none;}
 
 #top{
 background:white;
@@ -70,9 +86,12 @@ padding:15px;
 display:flex;
 gap:10px;
 align-items:center;
+box-shadow:0 5px 15px rgba(0,0,0,0.05);
 }
 
-#map{height:75vh}
+#map{
+height:75vh;
+}
 </style>
 </head>
 
@@ -94,7 +113,7 @@ align-items:center;
 <button id="signupTab">Create</button>
 </div>
 
-<input id="email" placeholder="Email (.com)">
+<input id="email" placeholder="Email">
 <input id="password" type="password" placeholder="Password">
 
 <div id="extra" style="display:none;">
@@ -135,38 +154,15 @@ align-items:center;
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-<script type="module">
-
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import {
-getAuth,
-createUserWithEmailAndPassword,
-signInWithEmailAndPassword,
-onAuthStateChanged,
-signOut
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-
-import {
-getFirestore,
-doc,
-setDoc,
-getDoc
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyCaV7k31Rg-FAF63K7TOh0xMcMYJdSb-lY",
-  authDomain: "walk-with-harlem.firebaseapp.com",
-  projectId: "walk-with-harlem"
-};
-
-const appFirebase = initializeApp(firebaseConfig);
-const auth = getAuth(appFirebase);
-const db = getFirestore(appFirebase);
+<script>
 
 // STATE
 let role="walker";
 let mode="login";
 
+const msg=document.getElementById("msg");
+
+// UI update
 function updateUI(){
 title.innerText=(mode==="login"?"Login":"Create")+" ("+role+")";
 extra.style.display=mode==="signup"?"block":"none";
@@ -179,33 +175,34 @@ signupTab.classList.toggle("active",mode==="signup");
 }
 
 // TOGGLES
-walkerBtn.onclick=()=>{role="walker";updateUI()}
-businessBtn.onclick=()=>{role="business";updateUI()}
-loginTab.onclick=()=>{mode="login";updateUI()}
-signupTab.onclick=()=>{mode="signup";updateUI()}
+walkerBtn.onclick=()=>{role="walker";updateUI();}
+businessBtn.onclick=()=>{role="business";updateUI();}
+loginTab.onclick=()=>{mode="login";updateUI();}
+signupTab.onclick=()=>{mode="signup";updateUI();}
 
-// AUTH
-submit.onclick=async()=>{
+// SIMPLE LOCAL LOGIN (NO BACKEND)
+submit.onclick=()=>{
 
 let e=email.value.trim();
 let p=password.value.trim();
 
-if(!e.endsWith(".com")){
-msg.innerText="Use .com email";
+if(!e || !p){
+msg.innerText="Enter email + password";
 return;
 }
 
-try{
+let users = JSON.parse(localStorage.getItem("users") || "{}");
 
+// SIGNUP
 if(mode==="signup"){
-let cred=await createUserWithEmailAndPassword(auth,e,p);
-
-await setDoc(doc(db,role==="walker"?"walkers":"businesses",cred.user.uid),{
-email:e,
+users[e] = {
+password:p,
 role:role,
 name:name.value,
 business:biz.value
-});
+};
+
+localStorage.setItem("users",JSON.stringify(users));
 
 msg.innerText="Account created. Sign in.";
 mode="login";
@@ -213,40 +210,41 @@ updateUI();
 return;
 }
 
-let cred=await signInWithEmailAndPassword(auth,e,p);
+// LOGIN
+if(!users[e] || users[e].password !== p){
+msg.innerText="Invalid login";
+return;
+}
 
-let w=await getDoc(doc(db,"walkers",cred.user.uid));
-let b=await getDoc(doc(db,"businesses",cred.user.uid));
-
-if(w.exists()) role="walker";
-if(b.exists()) role="business";
+role = users[e].role;
 
 authScreen.style.display="none";
 app.style.display="block";
 
-}catch(err){
-msg.innerText=err.message;
-}
-
 };
 
 // LOGOUT
-logout.onclick=()=>{signOut(auth);location.reload()}
+logout.onclick=()=>{
+location.reload();
+};
 
 // MAP
-let map=L.map('map').setView([40.821,-73.949],18);
+let map=L.map('map').setView([40.821,-73.949],17);
+
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
 let route;
 
+// BETTER ROUTES
 function generate(t,m){
 let s=t/10;
-if(m==="run") s*=1.5;
+if(m==="run") s*=1.6;
 
 return [
 [40.821,-73.949],
-[40.821+0.0004*s,-73.949+0.0006*s],
-[40.821+0.0008*s,-73.949+0.0012*s],
+[40.821+0.0003*s,-73.949+0.0005*s],
+[40.821+0.0007*s,-73.949+0.0002*s],
+[40.821+0.0004*s,-73.949-0.0004*s],
 [40.821,-73.949]
 ];
 }
@@ -261,18 +259,10 @@ if(route) map.removeLayer(route);
 
 route=L.polyline(pts,{color:"#2563eb",weight:5}).addTo(map);
 
-routeTitle.innerText=`${t} min ${m} route`;
+routeTitle.innerText=`${t} minute ${m} route`;
 
 map.fitBounds(route.getBounds());
 };
-
-// AUTO LOGIN
-onAuthStateChanged(auth,user=>{
-if(user){
-authScreen.style.display="none";
-app.style.display="block";
-}
-});
 
 updateUI();
 
