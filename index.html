@@ -3,301 +3,151 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AI Walk</title>
+<title>AI Walk Harlem</title>
 
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-
-body{
-font-family:Inter, system-ui;
-background:#0b1220;
-color:white;
-overflow:hidden;
-}
-
-/* AUTH OVERLAY */
-#authScreen{
-position:fixed;
-inset:0;
-display:flex;
-align-items:center;
-justify-content:center;
-background:radial-gradient(circle at top,#1d4ed8,#020617);
-z-index:1000;
-}
-
-.auth-card{
-width:440px;
-padding:32px;
-border-radius:22px;
-background:rgba(255,255,255,0.05);
-backdrop-filter:blur(25px);
-box-shadow:0 30px 100px rgba(0,0,0,0.6);
-}
-
-h1{
-font-size:26px;
-margin-bottom:10px;
-}
-
-.sub{
-color:#94a3b8;
-margin-bottom:20px;
-}
-
-/* TABS */
-.tabs{
-display:flex;
-gap:10px;
-margin-bottom:14px;
-}
-
-.tabs button{
-flex:1;
-padding:10px;
-border:none;
-border-radius:10px;
-background:rgba(255,255,255,0.1);
-color:white;
-cursor:pointer;
-transition:0.2s;
-}
-
-.tabs .active{
-background:#3b82f6;
-}
-
-/* INPUTS */
-input{
-width:100%;
-padding:12px;
-margin:6px 0;
-border-radius:10px;
-border:none;
-background:rgba(255,255,255,0.08);
-color:white;
-}
-
-.mainBtn{
-width:100%;
-padding:12px;
-margin-top:10px;
-border:none;
-border-radius:10px;
-background:#3b82f6;
-color:white;
-font-weight:600;
-cursor:pointer;
-}
-
-#msg{
-margin-top:10px;
-color:#f87171;
-font-size:14px;
-}
-
-/* APP */
-#app{
-display:none;
-height:100vh;
-}
-
-/* TOP BAR */
-#top{
-position:absolute;
-top:0;
-left:0;
-right:0;
-padding:14px;
-display:flex;
-gap:10px;
-background:rgba(0,0,0,0.5);
-backdrop-filter:blur(10px);
-z-index:500;
-}
-
-select,button{
-padding:10px;
-border-radius:8px;
-border:none;
-}
-
-button{
-cursor:pointer;
-}
-
-/* MAP */
-#map{
-height:100%;
-width:100%;
-}
+body{margin:0;font-family:Inter;background:#f4f8fc}
+.hidden{display:none}
+#loginOverlay{position:fixed;inset:0;background:#0006;display:flex;align-items:center;justify-content:center}
+.card{background:white;padding:30px;border-radius:20px;width:400px}
+button{padding:10px 15px;margin-top:10px;cursor:pointer}
+#map{height:100vh}
 </style>
 </head>
 
 <body>
 
-<!-- AUTH -->
-<div id="authScreen">
-<div class="auth-card">
+<div id="loginOverlay">
+<div class="card">
+<h2>Login</h2>
 
-<h1 id="title">Login (Walker)</h1>
-<div class="sub">Walk, earn, and explore your city</div>
+<button onclick="setRole('walker')">Walker</button>
+<button onclick="setRole('business')">Business</button>
 
-<div class="tabs">
-<button id="walkerBtn" class="active">Walker</button>
-<button id="businessBtn">Business</button>
-</div>
+<input id="email" placeholder="Email"><br>
+<input id="password" type="password" placeholder="Password"><br>
 
-<div class="tabs">
-<button id="loginTab" class="active">Sign In</button>
-<button id="signupTab">Create</button>
-</div>
-
-<input id="email" placeholder="Email">
-<input id="password" type="password" placeholder="Password">
-
-<div id="extra" style="display:none;">
-<input id="name" placeholder="Name">
-<input id="biz" placeholder="Business Name">
-</div>
-
-<button class="mainBtn" id="submit">Continue</button>
+<button onclick="submitLogin()">Continue</button>
 <p id="msg"></p>
-
 </div>
 </div>
 
-<!-- APP -->
-<div id="app">
-
-<div id="top">
-<select id="time">
-<option value="10">10 min</option>
-<option value="20">20 min</option>
-<option value="40">40 min</option>
-</select>
-
-<select id="mode">
-<option value="walk">Walk</option>
-<option value="run">Run</option>
-</select>
-
-<button id="build">Build Route</button>
-<button id="logout">Logout</button>
-
-<h3 id="routeTitle">Route</h3>
-</div>
-
+<div id="app" class="hidden">
+<button onclick="switchRole()">Switch Role</button>
+<button onclick="logout()">Logout</button>
 <div id="map"></div>
-
 </div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
 <script>
 
-// STATE
-let role="walker";
-let mode="login";
+// LOGIN SYSTEM
+let users = JSON.parse(localStorage.getItem("users")||"{}");
+let currentUserRole = "walker";
 
-const msg=document.getElementById("msg");
+function setRole(r){ currentUserRole = r; }
 
-// UI
-function updateUI(){
-title.innerText=(mode==="login"?"Login":"Create")+" ("+role+")";
-extra.style.display=mode==="signup"?"block":"none";
+function submitLogin(){
+let e=email.value;
+let p=password.value;
 
-walkerBtn.classList.toggle("active",role==="walker");
-businessBtn.classList.toggle("active",role==="business");
-
-loginTab.classList.toggle("active",mode==="login");
-signupTab.classList.toggle("active",mode==="signup");
+if(!e||!p){
+msg.innerText="Enter info";
+return;
 }
 
-// TOGGLES
-walkerBtn.onclick=()=>{role="walker";updateUI();}
-businessBtn.onclick=()=>{role="business";updateUI();}
-loginTab.onclick=()=>{mode="login";updateUI();}
-signupTab.onclick=()=>{mode="signup";updateUI();}
-
-// LOGIN SYSTEM (LOCAL)
-submit.onclick=()=>{
-
-let e=email.value.trim();
-let p=password.value.trim();
-
-let users=JSON.parse(localStorage.getItem("users")||"{}");
-
-if(mode==="signup"){
-users[e]={
-password:p,
-role:role,
-name:name.value,
-business:biz.value
-};
-
+if(!users[e]){
+users[e]={password:p,role:currentUserRole};
 localStorage.setItem("users",JSON.stringify(users));
 msg.innerText="Account created";
-mode="login";
-updateUI();
 return;
 }
 
-if(!users[e] || users[e].password!==p){
-msg.innerText="Invalid login";
+if(users[e].password!==p){
+msg.innerText="Wrong password";
 return;
 }
 
-role=users[e].role;
+currentUserRole=users[e].role;
 
-authScreen.style.display="none";
-app.style.display="block";
-};
+loginOverlay.classList.add("hidden");
+app.classList.remove("hidden");
 
-logout.onclick=()=>location.reload();
+initMap();
+}
 
-updateUI();
+function logout(){
+location.reload();
+}
+
+function switchRole(){
+currentUserRole=currentUserRole==="walker"?"business":"walker";
+alert("Role: "+currentUserRole);
+}
+
 // MAP
-let map=L.map('map').setView([40.821,-73.949],17);
+let map,walker;
+
+function initMap(){
+map=L.map('map').setView([40.821,-73.949],17);
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
-let route;
-
-// BETTER ROUTES
-function generate(t,m){
-
-let scale=t/10;
-if(m==="run") scale*=1.6;
-
-return [
-[40.821,-73.949],
-[40.821+0.0003*scale,-73.949+0.0005*scale],
-[40.821+0.0007*scale,-73.949+0.0002*scale],
-[40.821+0.0004*scale,-73.949-0.0004*scale],
-[40.821,-73.949]
-];
-}
-
-build.onclick=()=>{
-let t=time.value;
-let m=mode.value;
-
-let pts=generate(t,m);
-
-if(route) map.removeLayer(route);
-
-route=L.polyline(pts,{
-color:"#3b82f6",
-weight:5,
-opacity:0.9
+walker=L.circleMarker([40.821,-73.949],{
+radius:8,
+color:"black",
+fillColor:"black",
+fillOpacity:1
 }).addTo(map);
 
-routeTitle.innerText=`${t} min ${m}`;
+runRoute();
+}
 
-map.fitBounds(route.getBounds());
-};
+// SMOOTH MOVEMENT
+function runRoute(){
+
+let path=[
+[40.821,-73.949],
+[40.822,-73.948],
+[40.823,-73.949],
+[40.822,-73.950],
+[40.821,-73.949]
+];
+
+let i=0;
+
+function next(){
+if(i>=path.length-1)return;
+
+let start=L.latLng(path[i]);
+let end=L.latLng(path[i+1]);
+
+let t=0;
+
+function animate(){
+t+=0.02;
+
+let lat=start.lat+(end.lat-start.lat)*t;
+let lng=start.lng+(end.lng-start.lng)*t;
+
+walker.setLatLng([lat,lng]);
+
+if(t<1){
+requestAnimationFrame(animate);
+}else{
+i++;
+next();
+}
+}
+
+animate();
+}
+
+next();
+}
 
 </script>
 
