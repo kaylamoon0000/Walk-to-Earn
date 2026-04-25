@@ -1,93 +1,108 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AI Walk Platform</title>
 
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 
 <style>
-body{margin:0;font-family:Arial;background:#f4f7fb;}
+body{margin:0;font-family:Inter,Arial;background:#f5f9ff;}
 #map{height:70vh;}
-.panel{padding:20px;}
 .hidden{display:none;}
 
-button{
-padding:10px 15px;
-margin:5px;
-cursor:pointer;
-border-radius:8px;
-border:none;
-background:#2c6cff;
-color:white;
+.auth{
+position:fixed;
+inset:0;
+background:linear-gradient(135deg,#4fa3ff,#1f5ed8);
+display:flex;
+align-items:center;
+justify-content:center;
 }
+
+.box{
+background:white;
+padding:30px;
+border-radius:20px;
+width:380px;
+box-shadow:0 20px 60px rgba(0,0,0,0.2);
+}
+
+h2{margin:0 0 10px;}
 
 input,select{
 width:100%;
-padding:10px;
-margin:6px 0;
-border-radius:8px;
-border:1px solid #ccc;
+padding:12px;
+margin:8px 0;
+border-radius:10px;
+border:1px solid #ddd;
 }
 
-.auth-box{
-max-width:400px;
-margin:100px auto;
-background:white;
-padding:20px;
-border-radius:12px;
-box-shadow:0 10px 30px rgba(0,0,0,0.1);
+button{
+padding:12px;
+border:none;
+border-radius:10px;
+background:#2c6cff;
+color:white;
+cursor:pointer;
+width:100%;
+margin-top:10px;
 }
 
 .tabs button{
-background:#ddd;
-color:black;
+background:#ddd;color:black;width:48%;
+}
+.tabs .active{background:#2c6cff;color:white;}
+
+#top{
+padding:15px;
+background:white;
+display:flex;
+gap:10px;
+align-items:center;
 }
 
-.tabs .active{
-background:#2c6cff;
-color:white;
-}
 </style>
 </head>
 
 <body>
 
 <!-- LOGIN -->
-<div id="loginScreen" class="auth-box">
+<div class="auth" id="authScreen">
 
-<h2 id="authTitle">Login (Walker)</h2>
+<div class="box">
+
+<h2 id="title">Login (Walker)</h2>
 
 <div class="tabs">
-<button id="walkerBtn" class="active">Walker</button>
-<button id="businessBtn">Business</button>
+<button id="walker" class="active">Walker</button>
+<button id="business">Business</button>
 </div>
 
 <div class="tabs">
-<button id="loginTab" class="active">Sign In</button>
-<button id="signupTab">Create</button>
+<button id="login" class="active">Sign In</button>
+<button id="signup">Create</button>
 </div>
 
-<input id="email" placeholder="Email (.com only)">
-<input id="password" type="password" placeholder="Password">
+<input id="email" placeholder="Email (.com)">
+<input id="pass" type="password" placeholder="Password">
 
-<div id="extraFields" class="hidden">
+<div id="extra" class="hidden">
 <input id="name" placeholder="Name">
-<input id="bizName" placeholder="Business Name">
+<input id="biz" placeholder="Business Name">
 </div>
 
-<button id="authBtn">Continue</button>
-<p id="status"></p>
+<button id="submit">Continue</button>
 
+<p id="msg"></p>
+
+</div>
 </div>
 
 <!-- APP -->
 <div id="app" class="hidden">
 
-<div class="panel">
-<h2 id="title">Route Builder</h2>
-
+<div id="top">
 <select id="time">
 <option value="10">10 min</option>
 <option value="20" selected>20 min</option>
@@ -99,10 +114,10 @@ color:white;
 <option value="run">Run</option>
 </select>
 
-<button id="build">Build Route</button>
-<button id="start">Start</button>
+<button id="build">Build</button>
 <button id="logout">Logout</button>
 
+<h3 id="routeTitle">Route</h3>
 </div>
 
 <div id="map"></div>
@@ -113,14 +128,15 @@ color:white;
 
 <script type="module">
 
-// FIREBASE IMPORTS
+// FIREBASE
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import {
 getAuth,
 createUserWithEmailAndPassword,
 signInWithEmailAndPassword,
 onAuthStateChanged,
-signOut
+signOut,
+sendEmailVerification
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 import {
@@ -130,161 +146,143 @@ setDoc,
 getDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-// YOUR CONFIG
 const firebaseConfig = {
   apiKey: "AIzaSyCaV7k31Rg-FAF63K7TOh0xMcMYJdSb-lY",
   authDomain: "walk-with-harlem.firebaseapp.com",
-  projectId: "walk-with-harlem",
-  storageBucket: "walk-with-harlem.firebasestorage.app",
-  messagingSenderId: "29626188705",
-  appId: "1:29626188705:web:2a3230691b372cf5cb01e0"
+  projectId: "walk-with-harlem"
 };
 
-const appFirebase = initializeApp(firebaseConfig);
-const auth = getAuth(appFirebase);
-const db = getFirestore(appFirebase);
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
 
 // STATE
-let role = "walker";
-let modeAuth = "login";
+let role="walker";
+let mode="login";
 
-// UI ELEMENTS
-const walkerBtn = document.getElementById("walkerBtn");
-const businessBtn = document.getElementById("businessBtn");
-const loginTab = document.getElementById("loginTab");
-const signupTab = document.getElementById("signupTab");
-const extraFields = document.getElementById("extraFields");
-const authTitle = document.getElementById("authTitle");
-const status = document.getElementById("status");
+// UI
+const msg=document.getElementById("msg");
 
-// SWITCH ROLE
-walkerBtn.onclick = ()=>{role="walker";updateUI();}
-businessBtn.onclick = ()=>{role="business";updateUI();}
+function ui(){
+title.innerText=(mode==="login"?"Login":"Create")+" ("+role+")";
+extra.classList.toggle("hidden",mode==="login");
 
-// SWITCH MODE
-loginTab.onclick = ()=>{modeAuth="login";updateUI();}
-signupTab.onclick = ()=>{modeAuth="signup";updateUI();}
+walker.classList.toggle("active",role==="walker");
+business.classList.toggle("active",role==="business");
 
-// UPDATE UI
-function updateUI(){
-authTitle.innerText = `${modeAuth==="login"?"Login":"Create"} (${role})`;
-
-walkerBtn.classList.toggle("active",role==="walker");
-businessBtn.classList.toggle("active",role==="business");
-
-loginTab.classList.toggle("active",modeAuth==="login");
-signupTab.classList.toggle("active",modeAuth==="signup");
-
-extraFields.classList.toggle("hidden",modeAuth==="login");
+login.classList.toggle("active",mode==="login");
+signup.classList.toggle("active",mode==="signup");
 }
 
-// AUTH BUTTON
-document.getElementById("authBtn").onclick = async ()=>{
+// SWITCHES
+walker.onclick=()=>{role="walker";ui();}
+business.onclick=()=>{role="business";ui();}
+login.onclick=()=>{mode="login";ui();}
+signup.onclick=()=>{mode="signup";ui();}
 
-let email = document.getElementById("email").value.trim();
-let password = document.getElementById("password").value.trim();
+// AUTH
+submit.onclick=async()=>{
 
-if(!email.endsWith(".com")){
-status.innerText="Must use .com email";
+let e=email.value.trim();
+let p=pass.value.trim();
+
+if(!e.endsWith(".com")){
+msg.innerText="Use .com email";
 return;
 }
 
 try{
 
-// CREATE ACCOUNT
-if(modeAuth==="signup"){
-let userCred = await createUserWithEmailAndPassword(auth,email,password);
+// CREATE
+if(mode==="signup"){
+let cred=await createUserWithEmailAndPassword(auth,e,p);
 
-await setDoc(doc(db, role==="walker"?"walkers":"businesses", userCred.user.uid),{
-email:email,
+await setDoc(doc(db,role==="walker"?"walkers":"businesses",cred.user.uid),{
+email:e,
 role:role,
-name:document.getElementById("name").value,
-business:document.getElementById("bizName").value
+name:name.value,
+business:biz.value
 });
 
-status.innerText="Account created. Now sign in.";
-modeAuth="login";
-updateUI();
+await sendEmailVerification(cred.user);
+
+msg.innerText="Account created. Check email to verify, then sign in.";
+mode="login";
+ui();
 return;
 }
 
 // LOGIN
-let userCred = await signInWithEmailAndPassword(auth,email,password);
+let cred=await signInWithEmailAndPassword(auth,e,p);
 
-// DETECT ROLE
-let w = await getDoc(doc(db,"walkers",userCred.user.uid));
-let b = await getDoc(doc(db,"businesses",userCred.user.uid));
+if(!cred.user.emailVerified){
+msg.innerText="Verify email first.";
+return;
+}
+
+// detect role
+let w=await getDoc(doc(db,"walkers",cred.user.uid));
+let b=await getDoc(doc(db,"businesses",cred.user.uid));
 
 if(w.exists()) role="walker";
 if(b.exists()) role="business";
 
-// ENTER APP
-document.getElementById("loginScreen").classList.add("hidden");
-document.getElementById("app").classList.remove("hidden");
+authScreen.classList.add("hidden");
+app.classList.remove("hidden");
 
-}catch(e){
-status.innerText=e.message;
+}catch(err){
+msg.innerText=err.message;
 }
 
 };
 
 // LOGOUT
-document.getElementById("logout").onclick = ()=>{
-signOut(auth);
-location.reload();
-};
+logout.onclick=()=>{signOut(auth);location.reload();}
 
 // MAP
-let map = L.map('map').setView([40.821,-73.949],18);
+let map=L.map('map').setView([40.821,-73.949],18);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
-let line;
+let route;
 
-// ROUTE GENERATION
-function generateRoute(time,mode){
-
-let scale = time/10;
-
-if(mode==="run") scale *= 1.5;
+// ROUTE
+function gen(t,m){
+let s=t/10;
+if(m==="run")s*=1.5;
 
 return [
 [40.821,-73.949],
-[40.821+0.0003*scale,-73.949+0.0006*scale],
-[40.821+0.0007*scale,-73.949+0.001*scale],
+[40.821+0.0003*s,-73.949+0.0006*s],
+[40.821+0.0008*s,-73.949+0.0012*s],
 [40.821,-73.949]
 ];
 }
 
-// BUILD ROUTE
-document.getElementById("build").onclick = ()=>{
-let t = document.getElementById("time").value;
-let m = document.getElementById("mode").value;
+// BUILD
+build.onclick=()=>{
+let t=time.value;
+let m=mode.value;
 
-let coords = generateRoute(t,m);
+let pts=gen(t,m);
 
-if(line) map.removeLayer(line);
+if(route)map.removeLayer(route);
 
-line = L.polyline(coords,{color:"blue"}).addTo(map);
+route=L.polyline(pts,{color:"blue"}).addTo(map);
 
-document.getElementById("title").innerText = `${t} min ${m} route`;
+routeTitle.innerText=`${t} min ${m} route`;
 
-map.fitBounds(line.getBounds());
+map.fitBounds(route.getBounds());
 };
 
-// START
-document.getElementById("start").onclick = ()=>{
-alert("Session started");
-};
-
-// AUTO LOGIN CHECK
+// AUTO LOGIN
 onAuthStateChanged(auth,user=>{
-if(user){
-document.getElementById("loginScreen").classList.add("hidden");
-document.getElementById("app").classList.remove("hidden");
+if(user && user.emailVerified){
+authScreen.classList.add("hidden");
+app.classList.remove("hidden");
 }
 });
 
-updateUI();
+ui();
 
 </script>
 
