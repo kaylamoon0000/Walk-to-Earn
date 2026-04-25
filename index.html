@@ -3,41 +3,39 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AI Walk Platform</title>
+<title>AI Walk</title>
 
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 
 <style>
 body{
 margin:0;
-font-family:Inter,system-ui;
-background:#f6f8fc;
+font-family:Inter, Arial;
+background:#f4f7fb;
 }
 
-/* LOGIN SCREEN */
-.auth{
+/* LOGIN */
+#authScreen{
 height:100vh;
 display:flex;
-justify-content:center;
 align-items:center;
+justify-content:center;
 background:linear-gradient(135deg,#4f8cff,#1e4ed8);
 }
 
 .card{
 background:white;
-padding:30px;
-border-radius:18px;
-width:380px;
-box-shadow:0 20px 50px rgba(0,0,0,0.2);
+padding:28px;
+border-radius:16px;
+width:360px;
+box-shadow:0 15px 40px rgba(0,0,0,0.2);
 }
 
-h2{
-margin-bottom:10px;
-}
+h2{margin-bottom:10px;}
 
 .tabs{
 display:flex;
-gap:10px;
+gap:8px;
 margin-bottom:10px;
 }
 
@@ -45,7 +43,7 @@ margin-bottom:10px;
 flex:1;
 padding:10px;
 border:none;
-border-radius:10px;
+border-radius:8px;
 background:#e5e7eb;
 cursor:pointer;
 }
@@ -59,11 +57,11 @@ input{
 width:100%;
 padding:12px;
 margin:6px 0;
-border-radius:10px;
+border-radius:8px;
 border:1px solid #ddd;
 }
 
-button.main{
+.mainBtn{
 width:100%;
 padding:12px;
 margin-top:10px;
@@ -80,9 +78,7 @@ color:red;
 }
 
 /* APP */
-#app{
-display:none;
-}
+#app{display:none;}
 
 #top{
 background:white;
@@ -101,10 +97,10 @@ height:75vh;
 <body>
 
 <!-- LOGIN -->
-<div class="auth" id="authScreen">
+<div id="authScreen">
 <div class="card">
 
-<h2 id="authTitle">Login (Walker)</h2>
+<h2 id="title">Login (Walker)</h2>
 
 <div class="tabs">
 <button id="walkerBtn" class="active">Walker</button>
@@ -124,7 +120,8 @@ height:75vh;
 <input id="biz" placeholder="Business Name">
 </div>
 
-<button class="main" id="submit">Continue</button>
+<button class="mainBtn" id="submit">Continue</button>
+
 <p id="msg"></p>
 
 </div>
@@ -159,7 +156,6 @@ height:75vh;
 
 <script type="module">
 
-// FIREBASE
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import {
 getAuth,
@@ -182,20 +178,19 @@ const firebaseConfig = {
   projectId: "walk-with-harlem"
 };
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
+const appFirebase = initializeApp(firebaseConfig);
+const auth = getAuth(appFirebase);
+const db = getFirestore(appFirebase);
 
 // STATE
 let role = "walker";
 let mode = "login";
 
-// UI refs
+// UI
 const msg = document.getElementById("msg");
 
-// UI update
 function updateUI(){
-authTitle.innerText = (mode==="login"?"Login":"Create")+" ("+role+")";
+title.innerText = (mode==="login"?"Login":"Create")+" ("+role+")";
 extra.style.display = mode==="signup" ? "block" : "none";
 
 walkerBtn.classList.toggle("active",role==="walker");
@@ -224,7 +219,6 @@ return;
 
 try{
 
-// SIGN UP
 if(mode==="signup"){
 let cred = await createUserWithEmailAndPassword(auth,e,p);
 
@@ -241,17 +235,14 @@ updateUI();
 return;
 }
 
-// LOGIN
 let cred = await signInWithEmailAndPassword(auth,e,p);
 
-// detect role
 let w = await getDoc(doc(db,"walkers",cred.user.uid));
 let b = await getDoc(doc(db,"businesses",cred.user.uid));
 
 if(w.exists()) role="walker";
 if(b.exists()) role="business";
 
-// enter app
 authScreen.style.display="none";
 app.style.display="block";
 
@@ -270,9 +261,8 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
 let route;
 
-// ROUTE
 function generate(t,m){
-let s = t/10;
+let s=t/10;
 if(m==="run") s*=1.5;
 
 return [
@@ -283,12 +273,11 @@ return [
 ];
 }
 
-// BUILD
 build.onclick=()=>{
 let t=time.value;
 let m=mode.value;
 
-let pts = generate(t,m);
+let pts=generate(t,m);
 
 if(route) map.removeLayer(route);
 
