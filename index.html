@@ -2,47 +2,56 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>AI Walk</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Walk</title>
 
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 
 <style>
+*{box-sizing:border-box;margin:0;padding:0}
+
 body{
-margin:0;
 font-family:Inter, system-ui;
-background:#0f172a;
+background:#0b1220;
 color:white;
+overflow:hidden;
 }
 
-/* AUTH SCREEN */
+/* AUTH OVERLAY */
 #authScreen{
-height:100vh;
+position:fixed;
+inset:0;
 display:flex;
 align-items:center;
 justify-content:center;
-background:radial-gradient(circle at top,#2563eb,#020617);
+background:radial-gradient(circle at top,#1d4ed8,#020617);
+z-index:1000;
 }
 
-.card{
-width:420px;
+.auth-card{
+width:440px;
+padding:32px;
+border-radius:22px;
 background:rgba(255,255,255,0.05);
-backdrop-filter:blur(20px);
-border-radius:20px;
-padding:30px;
-box-shadow:0 20px 80px rgba(0,0,0,0.6);
+backdrop-filter:blur(25px);
+box-shadow:0 30px 100px rgba(0,0,0,0.6);
 }
 
-h2{
-margin-bottom:15px;
-font-weight:600;
+h1{
+font-size:26px;
+margin-bottom:10px;
+}
+
+.sub{
+color:#94a3b8;
+margin-bottom:20px;
 }
 
 /* TABS */
 .tabs{
 display:flex;
 gap:10px;
-margin-bottom:12px;
+margin-bottom:14px;
 }
 
 .tabs button{
@@ -57,44 +66,56 @@ transition:0.2s;
 }
 
 .tabs .active{
-background:#2563eb;
+background:#3b82f6;
 }
 
-/* INPUT */
+/* INPUTS */
 input{
 width:100%;
 padding:12px;
 margin:6px 0;
 border-radius:10px;
 border:none;
-background:rgba(255,255,255,0.1);
+background:rgba(255,255,255,0.08);
 color:white;
 }
 
-/* BUTTON */
 .mainBtn{
 width:100%;
 padding:12px;
 margin-top:10px;
 border:none;
 border-radius:10px;
-background:#2563eb;
+background:#3b82f6;
 color:white;
 font-weight:600;
 cursor:pointer;
 }
 
-#msg{margin-top:10px;color:#f87171}
+#msg{
+margin-top:10px;
+color:#f87171;
+font-size:14px;
+}
 
 /* APP */
-#app{display:none;}
+#app{
+display:none;
+height:100vh;
+}
 
+/* TOP BAR */
 #top{
+position:absolute;
+top:0;
+left:0;
+right:0;
+padding:14px;
 display:flex;
 gap:10px;
-padding:15px;
-background:#020617;
-border-bottom:1px solid rgba(255,255,255,0.1);
+background:rgba(0,0,0,0.5);
+backdrop-filter:blur(10px);
+z-index:500;
 }
 
 select,button{
@@ -103,18 +124,26 @@ border-radius:8px;
 border:none;
 }
 
+button{
+cursor:pointer;
+}
+
+/* MAP */
 #map{
-height:90vh;
+height:100%;
+width:100%;
 }
 </style>
 </head>
 
 <body>
 
+<!-- AUTH -->
 <div id="authScreen">
-<div class="card">
+<div class="auth-card">
 
-<h2 id="title">Login (Walker)</h2>
+<h1 id="title">Login (Walker)</h1>
+<div class="sub">Walk, earn, and explore your city</div>
 
 <div class="tabs">
 <button id="walkerBtn" class="active">Walker</button>
@@ -140,6 +169,7 @@ height:90vh;
 </div>
 </div>
 
+<!-- APP -->
 <div id="app">
 
 <div id="top">
@@ -154,7 +184,7 @@ height:90vh;
 <option value="run">Run</option>
 </select>
 
-<button id="build">Build</button>
+<button id="build">Build Route</button>
 <button id="logout">Logout</button>
 
 <h3 id="routeTitle">Route</h3>
@@ -165,12 +195,15 @@ height:90vh;
 </div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
 <script>
 
+// STATE
 let role="walker";
 let mode="login";
 
+const msg=document.getElementById("msg");
+
+// UI
 function updateUI(){
 title.innerText=(mode==="login"?"Login":"Create")+" ("+role+")";
 extra.style.display=mode==="signup"?"block":"none";
@@ -182,11 +215,13 @@ loginTab.classList.toggle("active",mode==="login");
 signupTab.classList.toggle("active",mode==="signup");
 }
 
+// TOGGLES
 walkerBtn.onclick=()=>{role="walker";updateUI();}
 businessBtn.onclick=()=>{role="business";updateUI();}
 loginTab.onclick=()=>{mode="login";updateUI();}
 signupTab.onclick=()=>{mode="signup";updateUI();}
 
+// LOGIN SYSTEM (LOCAL)
 submit.onclick=()=>{
 
 let e=email.value.trim();
@@ -195,7 +230,13 @@ let p=password.value.trim();
 let users=JSON.parse(localStorage.getItem("users")||"{}");
 
 if(mode==="signup"){
-users[e]={password:p,role:role};
+users[e]={
+password:p,
+role:role,
+name:name.value,
+business:biz.value
+};
+
 localStorage.setItem("users",JSON.stringify(users));
 msg.innerText="Account created";
 mode="login";
@@ -203,7 +244,7 @@ updateUI();
 return;
 }
 
-if(!users[e]||users[e].password!==p){
+if(!users[e] || users[e].password!==p){
 msg.innerText="Invalid login";
 return;
 }
@@ -216,38 +257,47 @@ app.style.display="block";
 
 logout.onclick=()=>location.reload();
 
-/* MAP */
+updateUI();
+// MAP
 let map=L.map('map').setView([40.821,-73.949],17);
+
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
 let route;
 
+// BETTER ROUTES
 function generate(t,m){
-let s=t/10;
-if(m==="run")s*=1.6;
+
+let scale=t/10;
+if(m==="run") scale*=1.6;
 
 return [
 [40.821,-73.949],
-[40.821+0.0003*s,-73.949+0.0005*s],
-[40.821+0.0007*s,-73.949+0.0002*s],
-[40.821+0.0004*s,-73.949-0.0004*s],
+[40.821+0.0003*scale,-73.949+0.0005*scale],
+[40.821+0.0007*scale,-73.949+0.0002*scale],
+[40.821+0.0004*scale,-73.949-0.0004*scale],
 [40.821,-73.949]
 ];
 }
 
 build.onclick=()=>{
-let pts=generate(time.value,mode.value);
+let t=time.value;
+let m=mode.value;
 
-if(route)map.removeLayer(route);
+let pts=generate(t,m);
 
-route=L.polyline(pts,{color:"#3b82f6",weight:5}).addTo(map);
+if(route) map.removeLayer(route);
 
-routeTitle.innerText=`${time.value} min ${mode.value}`;
+route=L.polyline(pts,{
+color:"#3b82f6",
+weight:5,
+opacity:0.9
+}).addTo(map);
+
+routeTitle.innerText=`${t} min ${m}`;
 
 map.fitBounds(route.getBounds());
 };
-
-updateUI();
 
 </script>
 
