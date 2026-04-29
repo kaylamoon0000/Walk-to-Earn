@@ -5,11 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>AI Walk-to-Earn Harlem</title>
 
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+  <link rel="preconnect" href="https://googleapis.com" />
+  <link rel="preconnect" href="https://gstatic.com" crossorigin />
+  <link href="https://googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cloudflare.com" />
+  <link rel="stylesheet" href="https://unpkg.com" crossorigin="" />
 
   <style>
     :root {
@@ -332,64 +332,452 @@
       margin-bottom: 6px;
       color: var(--navy);
       font-weight: 700;
+      font-size: 0.93rem;
+    }
+
+    select {
+      width: 100%;
+      min-height: 50px;
+      padding: 0 14px;
+      border-radius: 14px;
+      border: 1px solid #d6e2ef;
+      background: white;
+      color: #536276;
+    }
+
+    .metric-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .metric-pill,
+    .map-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid #dce7f3;
+      background: #f8fbff;
+      color: var(--navy);
+      font-weight: 700;
       font-size: 0.9rem;
+    }
+
+    .status {
+      display: none;
+      border-radius: 16px;
+      padding: 12px 14px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .status.show { display: block; }
+    .status.blue { background: #edf5ff; color: #2d7fce; }
+    .status.green { background: rgba(36,182,117,0.12); color: #147b52; }
+    .status.red { background: rgba(218,109,109,0.12); color: #b44d4d; }
+
+    .feed,
+    .route-steps,
+    .stop-list,
+    .reward-list,
+    .leaderboard,
+    .image-grid {
+      display: grid;
+      gap: 10px;
+    }
+
+    .feed-item,
+    .route-step,
+    .stop-card,
+    .reward-item,
+    .leaderboard li,
+    .dashboard-card,
+    .impact-card {
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 13px 14px;
+    }
+
+    .route-step,
+    .stop-card,
+    .reward-item,
+    .leaderboard li {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .route-left,
+    .stop-left {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .step-badge,
+    .stop-badge {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+      background: #edf5ff;
+      color: var(--blue-3);
+      font-weight: 800;
+      font-size: 0.9rem;
+    }
+
+    .stop-card {
+      cursor: pointer;
+      transition: 0.2s ease;
+      width: 100%;
+      text-align: left;
+      border: 1px solid var(--line);
+    }
+
+    .stop-card:hover { transform: translateY(-1px); }
+    .stop-card.locked { opacity: 0.56; }
+    .stop-card.active { border-color: #9dc8f3; box-shadow: 0 10px 24px rgba(75,152,234,0.12); }
+    .stop-card.done { border-color: rgba(36,182,117,0.42); background: #fbfffd; }
+
+    .stop-name { color: var(--navy); font-weight: 700; margin-bottom: 2px; }
+    .stop-meta-text { font-size: 0.87rem; color: #8794a5; }
+
+    .tag, .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .tag { background: #eef5ff; color: #2d7fce; padding: 4px 8px; font-size: 0.78rem; }
+    .badge.green { background: rgba(36,182,117,0.12); color: #147b52; }
+    .badge.gold { background: rgba(240,183,72,0.18); color: #8c6708; }
+    .badge.blue { background: rgba(75,152,234,0.14); color: #2d7fce; }
+
+    .map-shell {
+      background: linear-gradient(180deg, #f9fbff, #eef5fc);
+      border: 1px solid #dce7f3;
+      border-radius: 22px;
+      padding: 16px;
+    }
+
+    .map-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: flex-start;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    .map-meta { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+
+    .live-map {
+      position: relative;
+      height: 660px;
+      min-height: 660px;
+      overflow: hidden;
+      border-radius: 18px;
+      border: 1px solid #dce7f3;
+      background: #dfeaf5;
+    }
+
+    #leafletMap { position: absolute; inset: 0; z-index: 1; }
+
+    .topline {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+
+    .leaderboard { list-style: none; padding: 0; margin: 0; }
+
+    .grid { display: grid; gap: 16px; }
+    .grid.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
+    .store-filter { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px; }
+
+    .filter-btn {
+      border: 1px solid #d7e4ef;
+      background: white;
+      color: #5f6d7e;
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .filter-btn.active { background: #eef5ff; border-color: #bfd6f3; color: var(--blue-3); }
+
+    .image-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .image-grid img {
+      width: 100%;
+      height: 280px;
+      object-fit: cover;
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: #eef4fb;
+    }
+
+    .split-headings {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      text-align: center;
+      margin-bottom: 10px;
+      font-weight: 700;
+      color: var(--heading);
+    }
+
+    .phone-demo { background: white; border: 1px solid var(--line); border-radius: 22px; overflow: hidden; }
+    .phone-head { padding: 16px; color: white; background: linear-gradient(135deg, var(--blue1), var(--blue3)); }
+    .phone-body { padding: 16px; }
+    .muted { color: #8794a5; }
+    .footer-note { text-align: center; color: #94a2b3; padding: 34px 0; }
+
+    @media (max-width: 980px) {
+      .hero-grid, .grid.two, .grid.three, .image-grid, .summary-grid { grid-template-columns: 1fr; }
+      .live-map { height: 540px; min-height: 540px; }
     }
   </style>
 </head>
-<body>
-  <div class="topbar">
-    <div class="container">
-      <div class="topbar-inner">
-        <div class="brand">
-          <div class="brand-mark"><i class="fa-solid fa-shoe-prints"></i></div>
-          <div class="brand-copy">
-            <div class="brand-title">Walk Harlem</div>
-            <div class="brand-sub">AI Fitness</div>
+<body class="walker-view">
+  <nav class="topbar">
+    <div class="container topbar-inner">
+      <div class="brand">
+        <div class="brand-mark"><i class="fa-solid fa-route"></i></div>
+        <div class="brand-copy">
+          <div class="brand-title">AI Walk-to-Earn Harlem</div>
+          <div class="brand-sub">Interactive platform concept</div>
+        </div>
+      </div>
+      <div class="tabs">
+        <button class="tab-btn active" data-panel="platform">Platform</button>
+        <button class="tab-btn" data-panel="proposal">Proposal</button>
+        <button class="tab-btn" data-panel="images">Images</button>
+        <button class="tab-btn" data-panel="businesses">
+          Businesses <span class="tab-notif" id="businessNotif"></span>
+        </button>
+        <button class="tab-btn" data-panel="app">
+          App <span class="tab-notif" id="appNotif"></span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="container hero-grid">
+      <div>
+        <div class="hero-badge"><i class="fa-solid fa-sparkles"></i> Refined interactive platform</div>
+        <h1>AI Walk-to-Earn Harlem Platform</h1>
+        <div class="hero-preview" id="heroRoutePreview">Current preview: 20-Minute Discovery Route</div>
+        <p id="heroDescription">A cohesive experience that unifies route generation, map navigation, synchronized checkpoints, reward unlocking, business participation, and leaderboard tracking around Montefiore Square.</p>
+        <div class="hero-actions">
+          <button class="button primary" data-open-panel="platform">Login to Account</button>
+          <button class="button ghost" data-open-panel="platform">Sign Up Free</button>
+        </div>
+      </div>
+      <div class="hero-panel">
+        <div class="summary-shell">
+          <div class="summary-head">
+            <span>Session Summary</span>
+            <span><i class="fa-solid fa-location-dot"></i> Montefiore Square</span>
           </div>
-        </div>
-        <div class="tabs">
-          <button class="tab-btn active" data-target="home">Home</button>
-        </div>
-        <div class="topbar-right">
-          <div class="user-pill">Guest</div>
+          <div class="summary-grid">
+            <div class="summary-card"><strong id="heroMetricTime">20 min</strong>route length</div>
+            <div class="summary-card"><strong id="heroMetricMode">Standard</strong>movement mode</div>
+            <div class="summary-card"><strong id="heroMetricReward">Food</strong>reward profile</div>
+            <div class="summary-card"><strong id="heroMetricStops">4 stops</strong>verified checkpoints</div>
+          </div>
         </div>
       </div>
     </div>
-  </div>
+  </header>
 
-  <div class="hero">
-    <div class="container">
-      <div class="hero-grid">
-        <div class="hero-content">
-          <div class="hero-badge">Harlem Exclusive</div>
-          <h1>Walk to Earn</h1>
-          <p>Get rewarded for every step you take in the neighborhood.</p>
-          <div class="hero-actions">
-            <button class="button primary login-trigger">Login</button>
-            <button class="button ghost signup-trigger">Sign Up</button>
+  <main class="page container">
+    <!-- PLATFORM PANEL -->
+    <section class="panel active" id="platform">
+      <div class="platform-layout">
+        <div>
+          <div class="card">
+            <h3>Route Builder</h3>
+            <div class="form-group">
+              <label>Time available</label>
+              <select id="minutes">
+                <option value="10">10 minutes</option>
+                <option value="20" selected>20 minutes</option>
+                <option value="40">40 minutes</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Walking mode</label>
+              <select id="pace">
+                <option value="standard" selected>Standard</option>
+                <option value="slow">Slow pace</option>
+                <option value="wheelchair">Wheelchair-friendly</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Reward preference</label>
+              <select id="rewardType">
+                <option value="food" selected>Food rewards</option>
+                <option value="retail">Retail discounts</option>
+                <option value="mixed">Mixed rewards</option>
+              </select>
+            </div>
+            <div class="metric-row">
+              <button class="button soft" id="buildRoute">Build Route</button>
+              <button class="button green" id="startWalk">Start Session</button>
+              <button class="button dark" id="resetWalk">Reset</button>
+            </div>
+            <div class="metric-row">
+              <span class="metric-pill"><span id="metricDistance">0.0 mi</span></span>
+              <span class="metric-pill"><span id="metricScans">0 scans</span></span>
+              <span class="metric-pill"><span id="metricPoints">0 pts</span></span>
+            </div>
+          </div>
+          <div class="card">
+            <h3>Session Feed</h3>
+            <div class="status blue show" id="mainNotice">Build a route first.</div>
+            <div class="feed" id="liveFeed"></div>
+          </div>
+        </div>
+        <div>
+          <div class="map-shell">
+            <div class="map-head">
+              <div>
+                <h3 id="routeTitle">20-Minute Discovery Route</h3>
+                <p id="routeSummary">Balanced route around Montefiore Square.</p>
+              </div>
+              <div class="map-meta">
+                <span class="map-chip" id="chipA">Shade prioritized</span>
+                <span class="map-chip" id="chipB">Food rewards</span>
+                <span class="map-chip" id="chipC">4 stops</span>
+              </div>
+            </div>
+            <div class="live-map"><div id="leafletMap"></div></div>
+          </div>
+          <div class="card" style="margin-top:16px;">
+            <h3>Route Breakdown</h3>
+            <div class="route-steps" id="routeSteps"></div>
+          </div>
+        </div>
+        <div>
+          <div class="card">
+            <h3>Active Stops</h3>
+            <div class="stop-list" id="checkpointList"></div>
+          </div>
+          <div class="card">
+            <h3>Leaderboard</h3>
+            <ul class="leaderboard">
+              <li><span>1. Maya</span><strong>710 pts</strong></li>
+              <li><span>You</span><strong id="userLeaderboardPoints">0 pts</strong></li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Business Impact</h3>
+            <div class="impact-card">
+              <strong id="impactBusiness">No active business</strong><br />
+              <span id="impactMessage" class="muted">Start session to see impact.</span>
+            </div>
+            <div class="metric-row">
+              <span>Visits: <span id="impactVisits">0</span></span>
+              <span>Rewards: <span id="impactRewards">0</span></span>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </div>
+    </section>
 
+    <!-- PROPOSAL PANEL -->
+    <section class="panel" id="proposal">
+      <div class="card">
+        <h2>Proposal</h2>
+        <p>AI Walk-to-Earn Harlem is a public-space activation platform.</p>
+      </div>
+    </section>
+
+    <!-- IMAGES PANEL -->
+    <section class="panel" id="images">
+      <div class="card"><h2>Images</h2></div>
+      <div class="image-grid">
+        <img src="image/image1.png" alt="Before" />
+        <img src="image/image2.png" alt="After" />
+      </div>
+    </section>
+
+    <!-- BUSINESSES PANEL -->
+    <section class="panel" id="businesses">
+      <div class="card">
+        <h2>Businesses</h2>
+        <div class="status blue" id="businessGuide"></div>
+        <div class="store-filter">
+          <button class="filter-btn active" data-store="shake">Harlem Shake</button>
+          <button class="filter-btn" data-store="sylvia">Sylvia's Corner</button>
+          <button class="filter-btn" data-store="books">Word Up Books</button>
+        </div>
+      </div>
+      <div class="grid three">
+        <div class="dashboard-card" id="businessCardA"></div>
+        <div class="dashboard-card" id="businessCardB"></div>
+        <div class="dashboard-card" id="businessCardC"></div>
+      </div>
+      <div class="card" id="businessInsight" style="margin-top:16px;"></div>
+    </section>
+
+    <!-- APP PANEL -->
+    <section class="panel" id="app">
+      <div class="card">
+        <h2>App Simulation</h2>
+        <div class="status blue" id="appGuide"></div>
+      </div>
+      <div class="phone-demo">
+        <div class="phone-head"><h3>Live User Screen</h3></div>
+        <div class="phone-body">
+          <div class="status blue show" id="appNotice">Session ready.</div>
+          <div class="metric-row">
+            <button class="button dark" id="triggerAlert">Trigger Alert</button>
+            <button class="button green" id="simulateScan">Scan QR</button>
+          </div>
+          <div class="reward-list" id="rewardList"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://unpkg.com"></script>
   <script>
-    // Login button logic
-    document.querySelector('.login-trigger').addEventListener('click', () => {
-      alert('Login button clicked!');
-    });
-
-    // Signup button logic
-    document.querySelector('.signup-trigger').addEventListener('click', () => {
-      alert('Sign Up button clicked!');
-    });
-
-    // Tab logic
-    document.querySelectorAll('.tab-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        alert('Tab changed!');
-      });
-    });
-  </script>
-</body>
-</html>
+    // --- DATA ---
+    const routeConfigurations = {
+      "10-standard-food": {
+        title: "10-Minute Quick Reward Route",
+        description: "Short lunchtime preview.",
+        summary: "Compact route.",
+        chips: ["Compact", "Food", "3 stops"],
+        hero: { time: "10 min", mode: "Standard", reward: "Food", stops: "3 stops" },
+        steps: ["Begin at entry.", "Stop at food partner.", "Return path."],
+        checkpoints: [
+          { name: "Entry", type: "Start", reward: "Started", points: 0, lat: 40.82094, lng: -73.94952 },
+          { name: "Starbucks", type: "CP 1", reward: "10% off", points: 20, lat: 40.82115, lng: -73.94910 },
+          { name: "Harlem Shake", type: "Final", reward: "Bonus", points: 32, lat: 40.82142, lng: -73.94858 }
+        ]
+      },
+      "20-standard-food": {
+        title: "20-Minute Discovery Route",
+        description: "Balanced route around the square.",
+        summary: "Medium loop.",
