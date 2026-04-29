@@ -8,22 +8,29 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
-body{margin:0;font-family:Inter;background:#f4f8fc;color:#0f2235}
-.top{display:flex;justify-content:space-between;padding:16px 24px;background:white;border-bottom:1px solid #e1e8f0}
-.btn{padding:10px 16px;border-radius:12px;border:none;background:#347dff;color:white;font-weight:700;cursor:pointer}
+:root{--blue:#347dff;--bg:#f4f8fc;--card:#fff;--border:#e1e8f0}
+body{margin:0;font-family:Inter;background:var(--bg);color:#0f2235}
+.top{display:flex;justify-content:space-between;padding:16px 24px;background:#fff;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:1000}
+.tabs{display:flex;gap:10px}
+.tab{padding:10px 14px;border-radius:12px;cursor:pointer;font-weight:700}
+.tab.active{background:#edf4ff;color:#245fcb}
+.btn{padding:10px 16px;border-radius:12px;border:none;background:var(--blue);color:#fff;font-weight:700;cursor:pointer}
 .container{padding:20px;max-width:1300px;margin:auto}
 .grid{display:grid;grid-template-columns:300px 1fr 300px;gap:16px}
-.card{background:white;border-radius:20px;padding:16px;border:1px solid #e1e8f0}
+.card{background:var(--card);border-radius:20px;padding:16px;border:1px solid var(--border)}
 #map{height:600px;border-radius:16px}
-.auth{position:fixed;inset:0;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center}
+.auth{position:fixed;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center}
 .authBox{background:white;padding:24px;border-radius:20px;width:320px}
 .hidden{display:none}
+.stop{padding:10px;border:1px solid var(--border);border-radius:12px;margin-top:8px}
 </style>
 </head>
 <body>
+
+<!-- AUTH -->
 <div id="auth" class="auth">
 <div class="authBox">
-<h2>Login</h2>
+<h2>Join Platform</h2>
 <select id="role">
 <option value="walker">Walker</option>
 <option value="business">Business</option>
@@ -31,24 +38,34 @@ body{margin:0;font-family:Inter;background:#f4f8fc;color:#0f2235}
 <input placeholder="Email"><input type="password" placeholder="Password">
 <button class="btn" onclick="login()">Enter</button>
 </div></div>
+
+<!-- NAV -->
 <div class="top">
 <div><strong>AI Walk-to-Earn Harlem</strong></div>
+<div class="tabs">
+<div class="tab active" onclick="openTab('platform')">Platform</div>
+<div class="tab" onclick="openTab('proposal')">Proposal</div>
+<div class="tab" onclick="openTab('business')">Business</div>
+<div class="tab" onclick="openTab('app')">App</div>
+</div>
 <div id="userRole">Guest</div>
 </div>
-<div class="container">
+
+<!-- PLATFORM -->
+<div class="container tabPage" id="platform">
 <div class="grid">
 <div class="card">
-<h3>Route Builder</h3>
+<h3>AI Route Builder</h3>
 <select id="theme">
 <option value="food">Food</option>
 <option value="arts">Arts</option>
 <option value="retail">Retail</option>
 </select>
-<button class="btn" onclick="buildRoute()">Generate</button>
+<button class="btn" onclick="buildRoute()">Generate Route</button>
 <div id="stops"></div>
 </div>
 <div class="card">
-<h3>Map</h3>
+<h3>Live Map</h3>
 <div id="map"></div>
 </div>
 <div class="card">
@@ -57,16 +74,48 @@ body{margin:0;font-family:Inter;background:#f4f8fc;color:#0f2235}
 </div>
 </div>
 </div>
+
+<!-- PROPOSAL -->
+<div class="container tabPage hidden" id="proposal">
+<div class="card"><h2>Proposal</h2>
+<p>This platform connects walking activity with small business engagement and public space activation around Montefiore Square.</p></div>
+</div>
+
+<!-- BUSINESS -->
+<div class="container tabPage hidden" id="business">
+<div class="card"><h2>Business Analytics</h2>
+<div id="bizData">Visits: 0<br>Conversions: 0<br>Revenue Lift: $0</div></div>
+</div>
+
+<!-- APP -->
+<div class="container tabPage hidden" id="app">
+<div class="card"><h2>User App Simulation</h2>
+<button class="btn" onclick="simulateScan()">Scan QR</button>
+<div id="rewards">No rewards yet</div></div>
+</div>
+
 <script>
 let role="walker";
-function login(){role=document.getElementById("role").value;document.getElementById("auth").classList.add("hidden");document.getElementById("userRole").innerText=role;renderDashboard();}
-function renderDashboard(){const el=document.getElementById("dashboard");if(role==="walker"){el.innerHTML="Points: 0<br>Rewards: none"}else{el.innerHTML="Business analytics coming soon"}}
+let points=0,visits=0,rewards=0;
+function login(){role=document.getElementById('role').value;document.getElementById('auth').classList.add('hidden');document.getElementById('userRole').innerText=role;renderDashboard();}
+function renderDashboard(){const el=document.getElementById('dashboard');if(role==='walker'){el.innerHTML=`Points: ${points}<br>Rewards: ${rewards}`}else{el.innerHTML=`Visits: ${visits}<br>Revenue Lift: $${visits*12}`}}
+
+function openTab(id){document.querySelectorAll('.tabPage').forEach(p=>p.classList.add('hidden'));document.getElementById(id).classList.remove('hidden');document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));event.target.classList.add('active');}
+
 const map=L.map('map').setView([40.82155,-73.9487],18);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 let routeLayer=L.layerGroup().addTo(map);
-const data={food:[{n:"Cafe",lat:40.821,lng:-73.949},{n:"Bakery",lat:40.822,lng:-73.948},{n:"Deli",lat:40.8215,lng:-73.947}],arts:[{n:"Mural",lat:40.821,lng:-73.949},{n:"Gallery",lat:40.822,lng:-73.948},{n:"Books",lat:40.8215,lng:-73.947}],retail:[{n:"Shop",lat:40.821,lng:-73.949},{n:"Market",lat:40.822,lng:-73.948},{n:"Boutique",lat:40.8215,lng:-73.947}]};
-function buildRoute(){routeLayer.clearLayers();let t=document.getElementById("theme").value;let pts=data[t];let coords=[[40.8209,-73.9495]];pts.sort(()=>Math.random()-0.5);pts.forEach(p=>coords.push([p.lat,p.lng]));L.polyline(coords,{dashArray:"10 10"}).addTo(routeLayer);coords.forEach(c=>L.circleMarker(c).addTo(routeLayer));document.getElementById("stops").innerHTML=pts.map(p=>p.n).join("<br>");}
+
+const data={food:[{n:'Cafe',lat:40.821,lng:-73.949,score:0.9},{n:'Bakery',lat:40.822,lng:-73.948,score:0.8},{n:'Deli',lat:40.8215,lng:-73.947,score:0.7}],arts:[{n:'Mural',lat:40.821,lng:-73.949,score:0.9},{n:'Gallery',lat:40.822,lng:-73.948,score:0.8},{n:'Books',lat:40.8215,lng:-73.947,score:0.85}],retail:[{n:'Shop',lat:40.821,lng:-73.949,score:0.7},{n:'Market',lat:40.822,lng:-73.948,score:0.9},{n:'Boutique',lat:40.8215,lng:-73.947,score:0.8}]};
+
+function scoreRoute(nodes){return nodes.sort((a,b)=>b.score-a.score);} // simple AI scoring
+
+function buildRoute(){routeLayer.clearLayers();let t=document.getElementById('theme').value;let pts=scoreRoute(data[t]);let coords=[[40.8209,-73.9495]];pts.forEach(p=>coords.push([p.lat,p.lng]));L.polyline(coords,{dashArray:'10 10'}).addTo(routeLayer);coords.forEach(c=>L.circleMarker(c).addTo(routeLayer));document.getElementById('stops').innerHTML=pts.map(p=>`<div class='stop'><strong>${p.n}</strong></div>`).join('');}
+
+function simulateScan(){points+=20;rewards+=1;visits+=1;document.getElementById('rewards').innerHTML=`Rewards: ${rewards}`;document.getElementById('bizData').innerHTML=`Visits: ${visits}<br>Conversions: ${rewards}<br>Revenue Lift: $${visits*12}`;renderDashboard();}
+
 buildRoute();
 </script>
+
 </body>
 </html>
