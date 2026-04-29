@@ -5,11 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>AI Walk-to-Earn Harlem</title>
 
-  <link rel="preconnect" href="https://googleapis.com" />
-  <link rel="preconnect" href="https://gstatic.com" crossorigin />
-  <link href="https://googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cloudflare.com" />
-  <link rel="stylesheet" href="https://unpkg.com" crossorigin="" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
 
   <style>
     :root {
@@ -334,20 +334,10 @@
       font-weight: 700;
       font-size: 0.9rem;
     }
-
-    .input {
-      width: 100%;
-      height: 44px;
-      border-radius: 12px;
-      border: 1px solid var(--line);
-      padding: 0 14px;
-      background: #f8fbff;
-    }
   </style>
 </head>
-
-<body class="walker-view">
-  <nav class="topbar">
+<body>
+  <div class="topbar">
     <div class="container">
       <div class="topbar-inner">
         <div class="brand">
@@ -358,102 +348,48 @@
           </div>
         </div>
         <div class="tabs">
-          <button class="tab-btn active" data-target="dashboard">Dashboard</button>
-          <button class="tab-btn" data-target="map">Map</button>
-          <button class="tab-btn" data-target="settings">Settings</button>
+          <button class="tab-btn active" data-target="home">Home</button>
         </div>
         <div class="topbar-right">
-          <div class="user-pill"><i class="fa-solid fa-circle-user"></i> Guest</div>
+          <div class="user-pill">Guest</div>
         </div>
       </div>
     </div>
-  </nav>
+  </div>
 
-  <header class="hero">
+  <div class="hero">
     <div class="container">
       <div class="hero-grid">
         <div class="hero-content">
-          <div class="hero-badge"><i class="fa-solid fa-bolt"></i> Earn $WALK for every step</div>
-          <h1>Walk your way to rewards.</h1>
-          <p>The first AI-driven walk-to-earn platform exclusive to Harlem. Connect your wallet and start earning while you stay active.</p>
+          <div class="hero-badge">Harlem Exclusive</div>
+          <h1>Walk to Earn</h1>
+          <p>Get rewarded for every step you take in the neighborhood.</p>
           <div class="hero-actions">
-            <button class="button primary" onclick="handleAuth('login')">Login to Account</button>
-            <button class="button ghost" onclick="handleAuth('signup')">Sign Up Free</button>
-          </div>
-        </div>
-        <div class="hero-panel">
-          <div class="summary-shell">
-            <div class="summary-head">
-              <span>Daily Stats</span>
-              <i class="fa-solid fa-chart-line"></i>
-            </div>
-            <div class="summary-grid">
-              <div class="summary-card">
-                <strong>0</strong>
-                <span>Steps Today</span>
-              </div>
-              <div class="summary-card">
-                <strong>$0.00</strong>
-                <span>Earned</span>
-              </div>
-            </div>
+            <button class="button primary login-trigger">Login</button>
+            <button class="button ghost signup-trigger">Sign Up</button>
           </div>
         </div>
       </div>
     </div>
-  </header>
-
-  <main class="container page">
-    <div id="dashboard" class="panel active">
-      <div class="card">
-        <h3>Welcome to the Platform</h3>
-        <p>Please log in to track your progress and claim rewards.</p>
-      </div>
-    </div>
-    
-    <div id="map" class="panel">
-      <div class="card">
-        <h3>Harlem Hotspots</h3>
-        <p>Map view is loading...</p>
-      </div>
-    </div>
-
-    <div id="settings" class="panel">
-      <div class="card">
-        <h3>Account Settings</h3>
-        <div class="form-group">
-          <label>Display Name</label>
-          <input type="text" class="input" placeholder="Enter name...">
-        </div>
-        <br>
-        <button class="button dark">Save Changes</button>
-      </div>
-    </div>
-  </main>
+  </div>
 
   <script>
-    // Tab switching logic
-    const tabs = document.querySelectorAll('.tab-btn');
-    const panels = document.querySelectorAll('.panel');
-
-    tabs.forEach(tab => {
-      tab.addEventListener('click', () => {
-        const target = tab.getAttribute('data-target');
-        
-        // Update active tab
-        tabs.forEach(t => t.classList.remove('active'));
-        tab.classList.add('active');
-
-        // Update active panel
-        panels.forEach(p => p.classList.remove('active'));
-        document.getElementById(target).classList.add('active');
-      });
+    // Login button logic
+    document.querySelector('.login-trigger').addEventListener('click', () => {
+      alert('Login button clicked!');
     });
 
-    // Button click handler
-    function handleAuth(type) {
-      alert(type.charAt(0).toUpperCase() + type.slice(1) + " process starting... (Backend connection required)");
-    }
+    // Signup button logic
+    document.querySelector('.signup-trigger').addEventListener('click', () => {
+      alert('Sign Up button clicked!');
+    });
+
+    // Tab logic
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        alert('Tab changed!');
+      });
+    });
   </script>
 </body>
 </html>
