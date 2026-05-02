@@ -1470,7 +1470,11 @@ function moveWalkerTo(index) {
     fillOpacity: 1
   });
 
-  // removed flyTo so map stays locked in place
+  // smooth follow without dramatic recentering
+  map.panTo([stop.lat, stop.lng], {
+    animate: true,
+    duration: 0.8
+  });
 }
 
     function handleStopClick(index) {
