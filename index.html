@@ -1345,8 +1345,10 @@
         fillOpacity: 0
       }).addTo(map);
 
-      map.fitBounds(routeLine.getBounds(), { padding: [70, 70] });
-      map.setZoom(Math.max(map.getZoom(), 18));
+      map.fitBounds(routeLine.getBounds(), {
+        padding: [70, 70],
+        animate: false
+      });
     }
 
     function renderRouteConfig(key) {
